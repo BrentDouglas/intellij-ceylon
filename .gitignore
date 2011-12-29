@@ -1,0 +1,14 @@
+# IDEA
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# eclipse
+.project
+.classpath
+.settings
+.metadata
+
+# vim
+*.swp
