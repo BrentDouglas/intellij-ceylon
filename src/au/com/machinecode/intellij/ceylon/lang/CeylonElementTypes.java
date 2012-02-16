@@ -132,4 +132,13 @@ public class CeylonElementTypes {
     public static final CeylonElementType VALUE_REFERENCE = new CeylonElementType("");
     public static final CeylonElementType VARIABLE = new CeylonElementType("");
     public static final CeylonElementType WHILE = new CeylonElementType("");
+
+
+    public static final CeylonElementType EXPRESSION_CASE = new CeylonElementType("");
+    public static final CeylonElementType IS_CASE = new CeylonElementType("");
+    public static final CeylonElementType SATISFIES_CASE = new CeylonElementType("");
+
+    public static final CeylonElementType RESOURCE_DECLARATION = new CeylonElementType("");
+    public static final CeylonElementType RESOURCE_INITIALIZER = new CeylonElementType("");
+    public static final CeylonElementType RESOURCE_VARIABLE = new CeylonElementType("");
 }
