@@ -1,8 +1,8 @@
 package au.com.machinecode.intellij.ceylon.lang.parser;
 
-import au.com.machinecode.intellij.ceylon.lang.psi.CeylonPsiCreator;
 import au.com.machinecode.intellij.ceylon.lang.lexer.CeylonLexer;
 import au.com.machinecode.intellij.ceylon.lang.lexer.CeylonTokenSets;
+import au.com.machinecode.intellij.ceylon.lang.psi.CeylonPsiCreator;
 import au.com.machinecode.intellij.ceylon.lang.psi.impl.CeylonCompilationUnitImpl;
 import au.com.machinecode.intellij.ceylon.lang.psi.stub.CeylonStubFileElementType;
 import com.intellij.lang.ASTNode;

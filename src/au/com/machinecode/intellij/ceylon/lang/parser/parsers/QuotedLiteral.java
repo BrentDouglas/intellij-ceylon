@@ -8,7 +8,7 @@ import com.intellij.lang.PsiBuilder;
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
  */
-public class AdaptedTypes {
+public class QuotedLiteral {
 
     /*
      *
@@ -16,6 +16,20 @@ public class AdaptedTypes {
     public static boolean parse(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
 
+
+        if (!Util.find(builder, FOR_CLAUSE)) {
+            marker.rollbackTo();
+            return false;
+        }
+
+        Util.require(builder, LPAREN, CeylonBundle.message("parser.lparen.required"));
+
+        if (!ForIterator.parse(builder)) {
+            builder.error(CeylonBundle.message("parser.iteratorvariable.required"));
+        }
+
+
+        marker.done();
         return true;
     }
 }

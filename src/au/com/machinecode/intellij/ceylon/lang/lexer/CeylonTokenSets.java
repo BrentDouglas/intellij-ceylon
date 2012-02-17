@@ -2,8 +2,7 @@ package au.com.machinecode.intellij.ceylon.lang.lexer;
 
 import com.intellij.psi.tree.TokenSet;
 
-import static au.com.machinecode.intellij.ceylon.lang.CeylonTokenType.SEMICOLON;
-import static com.intellij.psi.TokenType.WHITE_SPACE;
+import static au.com.machinecode.intellij.ceylon.lang.lexer.CeylonTokenTypes.*;
 
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
@@ -15,12 +14,18 @@ public class CeylonTokenSets {
     );
 
     public static final TokenSet BLOCK_COMMENT_TOKENS = TokenSet.create(
-            MULTI_COMMENT
+            MULTI_LINE_COMMENT
     );
 
     public static final TokenSet COMMENT_TOKENS = TokenSet.create(
             LINE_COMMENT,
-            MULTI_COMMENT
+            MULTI_LINE_COMMENT
+    );
+
+    public static final TokenSet TOKEN_SEPARATOR_TOKENS = TokenSet.create(
+            WHITE_SPACE,
+            LINE_COMMENT,
+            MULTI_LINE_COMMENT
     );
 
     public static final TokenSet WHITE_SPACE_TOKENS = TokenSet.create(
@@ -32,227 +37,107 @@ public class CeylonTokenSets {
     );
 
     public static final TokenSet KEYWORD_TOKENS = TokenSet.create(
-            IMPORT,
-            CLASS_DEFINITION,
-            INTERFACE_DEFINITION,
-            OBJECT_DEFINITION,
-            TYPE_CONSTRAINT,
-            VALUE_MODIFIER,
-            ASSIGN,
-            VOID_MODIFIER,
-            FUNCTION_MODIFIER,
-            CASE_TYPES,
-            EXTENDS,
-            SATISFIES,
-            ADAPTED_TYPES,
-            ABSTRACTED_TYPE,
-            IN_OP,
-            OUT,
-            RETURN,
-            BREAK,
-            CONTINUE,
-            THROW,
-            IF_CLAUSE,
-            ELSE_CLAUSE,
-            SWITCH_CLAUSE,
-            CASE_CLAUSE,
-            FOR_CLAUSE,
-            WHILE_CLAUSE,
-            TRY_CLAUSE,
-            CATCH_CLAUSE,
-            FINALLY_CLAUSE,
-            THEN_CLAUSE,
-            THIS,
-            OUTER,
-            SUPER,
-            IS_OP,
-            EXISTS,
-            NONEMPTY
+            IMPORT_KEYWORD,
+            CLASS_KEYWORD,
+            INTERFACE_KEYWORD,
+            OBJECT_KEYWORD,
+            GIVEN_KEYWORD,
+            VALUE_KEYWORD,
+            ASSIGN_KEYWORD,
+            VOID_KEYWORD,
+            FUNCTION_KEYWORD,
+            OF_KEYWORD,
+            EXTENDS_KEYWORD,
+            SATISFIES_KEYWORD,
+            ADAPTS_KEYWORD,
+            ABSTRACTS_KEYWORD,
+            IN_KEYWORD,
+            OUT_KEYWORD,
+            RETURN_KEYWORD,
+            BREAK_KEYWORD,
+            CONTINUE_KEYWORD,
+            THROW_KEYWORD,
+            IF_KEYWORD,
+            ELSE_KEYWORD,
+            SWITCH_KEYWORD,
+            CASE_KEYWORD,
+            FOR_KEYWORD,
+            WHILE_KEYWORD,
+            TRY_KEYWORD,
+            CATCH_KEYWORD,
+            FINALLY_KEYWORD,
+            THEN_KEYWORD,
+            THIS_KEYWORD,
+            OUTER_KEYWORD,
+            SUPER_KEYWORD,
+            IS_KEYWORD,
+            EXISTS_KEYWORD,
+            NONEMPTY_KEYWORD
     );
 
     public static final TokenSet SEPERATOR_TOKENS = TokenSet.create(
-            COMMA
+            COMMA_OPERATOR
     );
 
     public static final TokenSet DELIMETER_TOKENS = TokenSet.create(
-            SEMICOLON
+            SEMICOLON_OPERATOR
     );
 
 
     public static final TokenSet ALL_OPERATOR_TOKENS = TokenSet.create(
-            COMMA,
-            SEMICOLON,
-            ELLIPSIS,
-            //HASH?
-            RBRACE,
-            LBRACE,
-            RPAREN,
-            LPAREN,
-            RBRACKET,
-            LBRACKET,
-            ARRAY,
-            MEMBER_OP,
-            SAFE_MEMBER_OP,
-            SPREAD_OP,
-            SPECIFY,
-            SUM_OP,
-            DIFFERENCE_OP,
-            QUOTIENT_OP,
-            PRODUCT_OP,
-            REMAINDER_OP,
-            POWER_OP,
-            INCREMENT_OP,
-            DECREMENT_OP,
-            RANGE_OP,
-            ENTRY_OP,
-            DEFAULT_OP,
-            NOT_OP,
-            AND_OP,
-            OR_OP,
-            COMPLEMENT_OP,
-            INTERSECTION_OP,
-            UNION_OP,
-            XOR_OP,
-            IDENTICAL_OP,
-            EQUAL_OP,
-            NOT_EQUAL_OP,
-            SMALLER_OP,
-            LARGER_OP,
-            SMALL_AS_OP,
-            LARGE_AS_OP,
-            COMPARE_OP,
-            ASSIGN_OP,
-            APPLY_OP,
-            ADD_ASSIGN_OP,
-            SUBTRACT_ASSIGN_OP,
-            DIVIDE_ASSIGN_OP,
-            MULTIPLY_ASSIGN_OP,
-            REMAINDER_ASSIGN_OP,
-            UNION_ASSIGN_OP,
-            INTERSECT_ASSIGN_OP,
-            XOR_ASSIGN_OP,
-            COMPLEMENT_ASSIGN_OP,
-            OR_ASSIGN_OP,
-            AND_ASSIGN_OP
+            COMMA_OPERATOR,
+            SEMICOLON_OPERATOR,
+            ELLIPSES_OPERATOR,
+            HASH_OPERATOR,
+            RIGHT_BRACE_OPERATOR,
+            LEFT_BRACE_OPERATOR,
+            RIGHT_PARENTHESIS_OPERATOR,
+            LEFT_PARENTHESIS_OPERATOR,
+            RIGHT_BRACKET_OPERATOR,
+            LEFT_BRACKET_OPERATOR,
+            ARRAY_OPERATOR,
+            MEMBER_OPERATOR,
+            SAFE_MEMBER_OPERATOR,
+            SPREAD_OPERATOR,
+            SPECIFY_OPERATOR,
+            ADD_OPERATOR,
+            SUBTRACT_OPERATOR,
+            DIVIDE_OPERATOR,
+            MULTIPLY_OPERATOR,
+            MODULO_OPERATOR,
+            POWER_OPERATOR,
+            INCREMENT_OPERATOR,
+            DECREMENT_OPERATOR,
+            RANGE_OPERATOR,
+            ENTRY_OPERATOR,
+            DEFAULT_OPERATOR,
+            NOT_OPERATOR,
+            AND_OPERATOR,
+            OR_OPERATOR,
+            COMPLEMENT_OPERATOR,
+            INTERSECTION_OPERATOR,
+            UNION_OPERATOR,
+            XOR_OPERATOR,
+            IDENTICAL_OPERATOR,
+            EQUAL_OPERATOR,
+            NOT_EQUAL_OPERATOR,
+            LESS_THAN_OPERATOR,
+            GREATER_THAN_OPERATOR,
+            LESS_THAN_OR_EQUAL_TO_OPERATOR,
+            GREATER_THAN_OR_EQUAL_TO_OPERATOR,
+            COMPARE_OPERATOR,
+            ASSIGN_OPERATOR,
+            APPLY_OPERATOR,
+            ADD_ASSIGN_OPERATOR,
+            SUBTRACT_ASSIGN_OPERATOR,
+            DIVIDE_ASSIGN_OPERATOR,
+            MULTIPLY_ASSIGN_OPERATOR,
+            MODULO_ASSIGN_OPERATOR,
+            UNION_ASSIGN_OPERATOR,
+            INTERSECTION_ASSIGN_OPERATOR,
+            XOR_ASSIGN_OPERATOR,
+            COMPLEMENT_ASSIGN_OPERATOR,
+            OR_ASSIGN_OPERATOR,
+            AND_ASSIGN_OPERATOR
     );
-
-    /*
-      EOF
-      ABSTRACTED_TYPE
-      ADAPTED_TYPES
-      ADD_ASSIGN_OP
-      AND_ASSIGN_OP
-      AND_OP
-      APPLY_OP
-      ARRAY
-      ASSIGN
-      ASSIGN_OP
-      BREAK
-      CASE_CLAUSE
-      CASE_TYPES
-      CATCH_CLAUSE
-      CHAR_LITERAL
-      CLASS_DEFINITION
-      COMMA
-      COMPARE_OP
-      COMPILER_ANNOTATION
-      COMPLEMENT_ASSIGN_OP
-      COMPLEMENT_OP
-      CONTINUE
-      DECREMENT_OP
-      DEFAULT_OP
-      DIFFERENCE_OP
-      DIVIDE_ASSIGN_OP
-      DIGIT
-      DIGITS
-      ELLIPSIS
-      ELSE_CLAUSE
-      ENTRY_OP
-      EQUAL_OP
-      EXISTS
-      EXTENDS
-      ESCAPE_SEQUENCE
-      EXPONENT
-      FINALLY_CLAUSE
-      FLOAT_LITERAL
-      FOR_CLAUSE
-      FUNCTION_MODIFIER
-      FRACTIONAL_MAGNITUDE
-      IDENTICAL_OP
-      IF_CLAUSE
-      IMPORT
-      INCREMENT_OP
-      INDEX_OP
-      INTERFACE_DEFINITION
-      INTERSECTION_OP
-      INTERSECT_ASSIGN_OP
-      IN_OP
-      IS_OP
-      IDENTIFIER_PART
-      IDENTIFIER_START
-      LARGER_OP
-      LARGE_AS_OP
-      LBRACE
-      LBRACKET
-      LIDENTIFIER
-      LINE_COMMENT
-      LPAREN
-      LETTER
-      MEMBER_OP
-      MULTIPLY_ASSIGN_OP
-      MULTI_COMMENT
-      MAGNITUDE
-      NATURAL_LITERAL
-      NONEMPTY
-      NOT_EQUAL_OP
-      NOT_OP
-      NON_CHARACTER_CHARS
-      NON_STRING_CHARS
-      OBJECT_DEFINITION
-      OR_ASSIGN_OP
-      OR_OP
-      OUT
-      OUTER
-      POWER_OP
-      PRODUCT_OP
-      QMARK
-      QUOTED_LITERAL
-      QUOTIENT_OP
-      QUOTED_LITERAL_PART
-      RANGE_OP
-      RBRACE
-      RBRACKET
-      REMAINDER_ASSIGN_OP
-      REMAINDER_OP
-      RETURN
-      RPAREN
-      SAFE_INDEX_OP
-      SAFE_MEMBER_OP
-      SATISFIES
-      SEMICOLON
-      SMALLER_OP
-      SMALL_AS_OP
-      SPECIFY
-      SPREAD_OP
-      STRING_LITERAL
-      SUBTRACT_ASSIGN_OP
-      SUM_OP
-      SUPER
-      SWITCH_CLAUSE
-      STRING_PART
-      THEN_CLAUSE
-      THIS
-      THROW
-      TRY_CLAUSE
-      TYPE_CONSTRAINT
-      UIDENTIFIER
-      UNION_ASSIGN_OP
-      UNION_OP
-      VALUE_MODIFIER
-      VOID_MODIFIER
-      WHILE_CLAUSE
-      WS
-      XOR_ASSIGN_OP
-      XOR_OP
-      */
 }

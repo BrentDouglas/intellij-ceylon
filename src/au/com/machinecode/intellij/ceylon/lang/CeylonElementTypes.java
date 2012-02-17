@@ -1,6 +1,9 @@
 package au.com.machinecode.intellij.ceylon.lang;
 
-public class CeylonElementTypes {
+public interface CeylonElementTypes {
+    public static final CeylonElementType ABBREVIATION = new CeylonElementType("");
+    public static final CeylonElementType ABBREVIATED_TYPE = new CeylonElementType("");
+    public static final CeylonElementType ABSTRACTED_TYPE = new CeylonElementType("");
     public static final CeylonElementType ADAPTED_TYPES = new CeylonElementType("");
     public static final CeylonElementType ANNOTATION = new CeylonElementType("");
     public static final CeylonElementType ARGUMENTS = new CeylonElementType("");
@@ -14,11 +17,13 @@ public class CeylonElementTypes {
     public static final CeylonElementType BLOCK = new CeylonElementType("");
     public static final CeylonElementType BOOLEAN_CONDITION = new CeylonElementType("");
     public static final CeylonElementType BREAK = new CeylonElementType("");
+    public static final CeylonElementType CALLABLE_PARAM = new CeylonElementType("");
     public static final CeylonElementType CALLABLE_REFERENCE = new CeylonElementType("");
     public static final CeylonElementType CALLABLE_VARIABLE = new CeylonElementType("");
     public static final CeylonElementType CASE_ITEM = new CeylonElementType("");
     public static final CeylonElementType CASE = new CeylonElementType("");
     public static final CeylonElementType CASES = new CeylonElementType("");
+    public static final CeylonElementType CASE_TYPE = new CeylonElementType("");
     public static final CeylonElementType CASE_TYPES = new CeylonElementType("");
     public static final CeylonElementType CATCH = new CeylonElementType("");
     public static final CeylonElementType CHARACTER_LITERAL = new CeylonElementType("");
@@ -34,9 +39,12 @@ public class CeylonElementTypes {
     public static final CeylonElementType CONTROL_STRUCTURE = new CeylonElementType("");
     public static final CeylonElementType DECLARATION = new CeylonElementType("");
     public static final CeylonElementType DEFAULT_CASE_ITEM = new CeylonElementType("");
+    public static final CeylonElementType DEFAULT_PARAM = new CeylonElementType("");
     public static final CeylonElementType DIRECTIVE = new CeylonElementType("");
     public static final CeylonElementType DIRECTIVE_STATEMENT = new CeylonElementType("");
     public static final CeylonElementType ELSE = new CeylonElementType("");
+    public static final CeylonElementType ENTRY_PARAM_PAIR = new CeylonElementType("");
+    public static final CeylonElementType ENTRY_TYPE = new CeylonElementType("");
     public static final CeylonElementType ENTRY_VARIABLE_PAIR = new CeylonElementType("");
     public static final CeylonElementType EXISTS_OR_IS_NONEMPTY_CONDITION = new CeylonElementType("");
     public static final CeylonElementType EXPRESSIONS = new CeylonElementType("");
@@ -69,6 +77,7 @@ public class CeylonElementTypes {
     public static final CeylonElementType INTERFACE_HEADER = new CeylonElementType("");
     public static final CeylonElementType INTERFACE_INHERITANCE = new CeylonElementType("");
     public static final CeylonElementType INTERFACE = new CeylonElementType("");
+    public static final CeylonElementType INTERSECTION_TYPE = new CeylonElementType("");
     public static final CeylonElementType INVOCATION = new CeylonElementType("");
     public static final CeylonElementType IS_CONDITION = new CeylonElementType("");
     public static final CeylonElementType ITERATOR_VARIABLE = new CeylonElementType("");
@@ -91,6 +100,7 @@ public class CeylonElementTypes {
     public static final CeylonElementType OPERATOR_EXPRESSION = new CeylonElementType("");
     public static final CeylonElementType OPERATOR = new CeylonElementType("");
     public static final CeylonElementType PACKAGE_NAME = new CeylonElementType("");
+    public static final CeylonElementType PARAM = new CeylonElementType("");
     public static final CeylonElementType PARAMS = new CeylonElementType("");
     public static final CeylonElementType PAR_EXPRESSION = new CeylonElementType("");
     public static final CeylonElementType POSITIONAL_ARGUMENTS = new CeylonElementType("");
@@ -102,9 +112,13 @@ public class CeylonElementTypes {
     public static final CeylonElementType SATISFIED_TYPES = new CeylonElementType("");
     public static final CeylonElementType SATISFIES_CONDITION = new CeylonElementType("");
     public static final CeylonElementType SELF_REFERENCE = new CeylonElementType("");
+    public static final CeylonElementType SEQUENCED_PARAM = new CeylonElementType("");
+    public static final CeylonElementType SEQUENCED_TYPE = new CeylonElementType("");
+    public static final CeylonElementType SEQUENCED_TYPE_PARAM = new CeylonElementType("");
     public static final CeylonElementType SEQUENCE_INSTANTIATION = new CeylonElementType("");
     public static final CeylonElementType SEQUENCE = new CeylonElementType("");
     public static final CeylonElementType SIMPLE_ATTRIBUTE = new CeylonElementType("");
+    public static final CeylonElementType SIMPLE_PARAM = new CeylonElementType("");
     public static final CeylonElementType SPECIFICATION = new CeylonElementType("");
     public static final CeylonElementType SPECIFIED_NAMED_ARGUMENT = new CeylonElementType("");
     public static final CeylonElementType SPECIFIER = new CeylonElementType("");
@@ -119,18 +133,23 @@ public class CeylonElementTypes {
     public static final CeylonElementType TRY = new CeylonElementType("");
     public static final CeylonElementType TYPE_ALIAS = new CeylonElementType("");
     public static final CeylonElementType TYPE_ARGUMENTS = new CeylonElementType("");
+    public static final CeylonElementType TYPE_CONSTRAINT = new CeylonElementType("");
     public static final CeylonElementType TYPE_CONSTRAINTS = new CeylonElementType("");
+    public static final CeylonElementType TYPE_CONSTRAINT_INHERITANCE = new CeylonElementType("");
     public static final CeylonElementType TYPE_DECLARATION = new CeylonElementType("");
     public static final CeylonElementType TYPED_VARIABLE = new CeylonElementType("");
     public static final CeylonElementType TYPE = new CeylonElementType("");
     public static final CeylonElementType TYPE_META = new CeylonElementType("");
     public static final CeylonElementType TYPE_NAME = new CeylonElementType("");
+    public static final CeylonElementType TYPE_NAME_WITH_ARGUMENTS = new CeylonElementType("");
+    public static final CeylonElementType TYPE_PARAM = new CeylonElementType("");
     public static final CeylonElementType TYPE_PARAMS = new CeylonElementType("");
     public static final CeylonElementType TYPE_SPECIFIER = new CeylonElementType("");
     public static final CeylonElementType UNION_TYPE = new CeylonElementType("");
     public static final CeylonElementType VALUE_META = new CeylonElementType("");
     public static final CeylonElementType VALUE_REFERENCE = new CeylonElementType("");
     public static final CeylonElementType VARIABLE = new CeylonElementType("");
+    public static final CeylonElementType VARIANCE = new CeylonElementType("");
     public static final CeylonElementType WHILE = new CeylonElementType("");
 
 

@@ -7,6 +7,6 @@ import com.intellij.lexer.LayeredLexer;
  */
 public class CeylonHighlightingLexer extends LayeredLexer {
     public CeylonHighlightingLexer() {
-        super(new CeylonLexer());
+        super(new CeylonAdaptedLexer());
     }
 }
