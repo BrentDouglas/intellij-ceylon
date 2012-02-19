@@ -1106,15 +1106,18 @@ public class CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementT
     public static boolean parseImportElements(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (parseImportElement(builder)) {
+            boolean foundComma = false;
             while (find(builder, COMMA_OPERATOR)) {
+                foundComma = true;
                 if (!parseImportElement(builder)) {
-                    builder.error(CeylonBundle.message("expected.comma"));
+                    foundComma = false;
+                } else {
+                    break;
                 }
             }
-            //TODO: Error message and check wildcard on failed import element
-            if (find(builder, COMMA_OPERATOR)) {
+            if (foundComma || find(builder, COMMA_OPERATOR)) {
                 if (!parseImportWildcard(builder)) {
-                    builder.error(CeylonBundle.message("expected.comma"));
+                    builder.error(CeylonBundle.message("expected.importorimportwildcard"));
                 }
             }
         } else {
@@ -1211,7 +1214,6 @@ public class CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementT
             marker.rollbackTo();
             return false;
         }
-        //TODO:
         if (parseInterfaceBody(builder)) {
         } else if (parseTypeSpecifier(builder)) {
             require(builder, SEMICOLON_OPERATOR, CeylonBundle.message("expected.semicolon"));
@@ -1699,10 +1701,49 @@ public class CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementT
             marker.rollbackTo();
             return false;
         }
-        if (!parseParam(builder)) {
-            builder.error(CeylonBundle.message("expected.param"));
+        if (parseParam(builder)) {
+            boolean foundComma = false;
+            while (find(builder, COMMA_OPERATOR)) {
+                foundComma = true;
+                if (parseParam(builder)) {
+                    foundComma = false;
+                } else {
+                    break;
+                }
+            }
+            while (foundComma || find(builder, COMMA_OPERATOR)) {
+                foundComma = true;
+                if (parseDefaultParam(builder)) {
+                    foundComma = false;
+                } else {
+                    break;
+                }
+            }
+            if (foundComma || find(builder, COMMA_OPERATOR)) {
+                if (!parseSequencedParam(builder)) {
+                    builder.error(CeylonBundle.message("expected.paramordefaultparamorsequencedparam"));
+                }
+            }
+        } else if (parseDefaultParam(builder)) {
+            boolean foundComma = false;
+            while (foundComma || find(builder, COMMA_OPERATOR)) {
+                foundComma = true;
+                if (parseDefaultParam(builder)) {
+                    foundComma = false;
+                } else {
+                    break;
+                }
+            }
+            if (foundComma || find(builder, COMMA_OPERATOR)) {
+                if (!parseSequencedParam(builder)) {
+                    builder.error(CeylonBundle.message("expected.defaultparamorsequencedparam"));
+                }
+            }
+        } else if (parseSequencedParam(builder)) {
+
+        } else {
+            builder.error(CeylonBundle.message("expected.paramordefaultparamorsequencedparam"));
         }
-        //TODO:
         require(builder, RIGHT_PARENTHESIS_OPERATOR, CeylonBundle.message("expected.rightparenthesis"));
         marker.done(PARAMS);
         return true;
@@ -2001,7 +2042,6 @@ public class CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementT
             marker.rollbackTo();
             return false;
         }
-        //TODO:
         if ((parseSpecifier(builder) || parseInitializer(builder))) {
             require(builder, SEMICOLON_OPERATOR, CeylonBundle.message("expected.semicolon"));
         } else if (parseNamedArguments(builder)) {
