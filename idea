@@ -1,0 +1,92 @@
+#!/bin/bash
+#
+# @author Brent Douglas <brent.n.douglas@gmail.com>
+#
+# Pinched from https://github.com/gshakhn/sonar-intellij-plugin/blob/master/install-intellij-libs.sh
+
+path=$PATH
+source /etc/init.d/functions
+export PATH="${path}"
+
+GREEN="\033[32m"
+RED="\033[31m"
+RESET="\033[00m"
+
+IDEA_HOME="${IDEA_HOME-/usr/share/idea}"
+
+install-single() {
+  local MAVEN="mvn install:install-file ${@}"
+
+  [ ${RETVAL} -eq 0 ] && {
+    echo -e "${GREEN}Running \"${MAVEN}\"${RESET}"
+    ${MAVEN}
+    RETVAL=${?}
+    [ ${RETVAL} -eq 0 ] || echo -e "${RED}Failed running \"${MAVEN}\"${RESET}"
+  }
+
+  return ${RETVAL}
+}
+
+install() {
+  local VERSION=${1}
+  shift
+
+  echo -e "${GREEN}Installing${RESET}"
+
+  install-single -Dfile="$IDEA_HOME/lib/idea.jar" -DgroupId=com.intellij -DartifactId=idea -Dversion=${VERSION} -Dpackaging=jar
+  install-single -Dfile="$IDEA_HOME/lib/openapi.jar" -DgroupId=com.intellij -DartifactId=openapi -Dversion=${VERSION} -Dpackaging=jar
+  install-single -Dfile="$IDEA_HOME/lib/util.jar" -DgroupId=com.intellij -DartifactId=util -Dversion=${VERSION} -Dpackaging=jar
+  install-single -Dfile="$IDEA_HOME/lib/extensions.jar" -DgroupId=com.intellij -DartifactId=extensions -Dversion=${VERSION} -Dpackaging=jar
+  install-single -Dfile="$IDEA_HOME/lib/annotations.jar" -DgroupId=com.intellij -DartifactId=annotations -Dversion=${VERSION} -Dpackaging=jar
+
+  if [ $RETVAL -eq 0 ]; then
+    success
+  else
+    failure
+  fi
+  return $RETVAL
+}
+
+usage() {
+  echo "Usage: $0 { install [version] }"
+}
+
+RETVAL=0
+
+INSTALL=1
+
+VERSION="11.1.4"
+
+for CMD in "${@}"
+do
+  case ${CMD} in
+    i|install)
+      INSTALL=0
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      VERSION=${1}
+      shift
+      [ -z ${1} ] || {
+        usage
+        RETVAL=64
+        break
+      }
+      ;;
+  esac
+done
+
+CHECKED_OUT=1
+
+[ ${RETVAL} -eq 0 ] && [ ${INSTALL} -eq 0 ] && {
+  install ${VERSION}
+  RETVAL=${?}
+}
+
+echo ""
+
+exit $RETVAL

@@ -89,8 +89,8 @@ run-single() {
     cd ${WORK_DIR}/${MODULE}
     ant ${TARGETS}
     RETVAL=${?}
+    [ ${RETVAL} -eq 0 ] || echo -e "${RED}Failed running \"ant ${TARGETS}\" for ${MODULE}${RESET}"
   }
-  [ ${RETVAL} -eq 0 ] || echo -e "${RED}Failed running \"ant ${TARGETS}\" for ${MODULE}${RESET}"
 }
 
 build() {
@@ -103,7 +103,7 @@ build() {
 
   run-single ceylon-module-resolver clean publish
 
-  run-single ceylon-spec clean publish
+  run-single ceylon-spec clean publish pdf
 
   run-single ceylon-runtime clean publish
 
@@ -158,8 +158,8 @@ install-single() {
     cd ${WORK_DIR}/${MODULE}
     ${MAVEN}
     RETVAL=${?}
+    [ ${RETVAL} -eq 0 ] || echo -e "${RED}Failed running \"${MAVEN}\" for ${MODULE}${RESET}"
   }
-  [ ${RETVAL} -eq 0 ] || echo -e "${RED}Failed running \"${MAVEN}\" for ${MODULE}${RESET}"
 
   return ${RETVAL}
 }

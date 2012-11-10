@@ -6,15 +6,50 @@
 
     <groupId>io.machinecode</groupId>
     <artifactId>intellij-ceylon</artifactId>
-    <version>1.0</version>
+    <packaging>jar</packaging>
+    <version>0.4-SNAPSHOT</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <version.com.intellij>11.1.4</version.com.intellij>
+        <version.com.intellij.annotations>${version.com.intellij}</version.com.intellij.annotations>
+        <version.com.intellij.extensions>${version.com.intellij}</version.com.intellij.extensions>
+        <version.com.intellij.idea>${version.com.intellij}</version.com.intellij.idea>
+        <version.com.intellij.openapi>${version.com.intellij}</version.com.intellij.openapi>
+        <version.com.intellij.util>${version.com.intellij}</version.com.intellij.util>
         <version.com.redhat.ceylon.typechecker>0.4</version.com.redhat.ceylon.typechecker>
+        <version.org.apache.maven.plugins.maven-checkstyle-plugin>2.9.1</version.org.apache.maven.plugins.maven-checkstyle-plugin>
         <version.org.antlr.antlr-runtime>3.4</version.org.antlr.antlr-runtime>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.intellij</groupId>
+                <artifactId>annotations</artifactId>
+                <version>${version.com.intellij.annotations}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.intellij</groupId>
+                <artifactId>extensions</artifactId>
+                <version>${version.com.intellij.extensions}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.intellij</groupId>
+                <artifactId>idea</artifactId>
+                <version>${version.com.intellij.idea}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.intellij</groupId>
+                <artifactId>openapi</artifactId>
+                <version>${version.com.intellij.openapi}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.intellij</groupId>
+                <artifactId>util</artifactId>
+                <version>${version.com.intellij.util}</version>
+            </dependency>
             <dependency>
                 <groupId>com.redhat.ceylon</groupId>
                 <artifactId>typechecker</artifactId>
@@ -30,6 +65,31 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>extensions</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>idea</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>openapi</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>util</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.redhat.ceylon</groupId>
             <artifactId>typechecker</artifactId>
         </dependency>
@@ -38,4 +98,38 @@
             <artifactId>antlr-runtime</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${version.org.apache.maven.plugins.maven-checkstyle-plugin}</version>
+                    <configuration>
+                        <configLocation>checkstyle.xml</configLocation>
+                        <consoleOutput>true</consoleOutput>
+                        <failsOnError>true</failsOnError>
+                        <useFile/>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>check-style</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>checkstyle</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
