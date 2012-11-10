@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.machinecode</groupId>
+    <artifactId>intellij-ceylon</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <version.com.redhat.ceylon.typechecker>0.4</version.com.redhat.ceylon.typechecker>
+        <version.org.antlr.antlr-runtime>3.4</version.org.antlr.antlr-runtime>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.redhat.ceylon</groupId>
+                <artifactId>typechecker</artifactId>
+                <version>${version.com.redhat.ceylon.typechecker}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>antlr-runtime</artifactId>
+                <version>${version.org.antlr.antlr-runtime}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.redhat.ceylon</groupId>
+            <artifactId>typechecker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+        </dependency>
+    </dependencies>
+</project>

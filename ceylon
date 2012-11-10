@@ -172,15 +172,15 @@ install() {
 
   install-single ceylon.runtime -Dfile="${CEYLON_REPO}/ceylon/runtime/${VERSION}/ceylon.runtime-${VERSION}.jar" -DgroupId=ceylon -DartifactId=runtime -Dversion=${VERSION} -Dpackaging=jar
 
-  install-single ceylon-common -Dfile="${CEYLON_REPO}/ceylon/common/${VERSION}/com.redhat.ceylon.common-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=common -Dversion=${VERSION} -Dpackaging=jar
+  install-single ceylon-common -Dfile="${CEYLON_REPO}/com/redhat/ceylon/common/${VERSION}/com.redhat.ceylon.common-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=common -Dversion=${VERSION} -Dpackaging=jar
 
-  install-single ceylon-module-resolver -Dfile="${CEYLON_REPO}/ceylon/module-resolver/${VERSION}/com.redhat.ceylon.module-resolver-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=module-resolver -Dversion=${VERSION} -Dpackaging=jar
+  install-single ceylon-module-resolver -Dfile="${CEYLON_REPO}/com/redhat/ceylon/module-resolver/${VERSION}/com.redhat.ceylon.module-resolver-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=module-resolver -Dversion=${VERSION} -Dpackaging=jar
 
-  install-single ceylon-spec -Dfile="${CEYLON_REPO}/ceylon/typechecker/${VERSION}/com.redhat.ceylon.typechecker-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=typechecker -Dversion=${VERSION} -Dpackaging=jar
+  install-single ceylon-spec -Dfile="${CEYLON_REPO}/com/redhat/ceylon/typechecker/${VERSION}/com.redhat.ceylon.typechecker-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=typechecker -Dversion=${VERSION} -Dpackaging=jar
 
-  install-single ceylon-compiler -Dfile="${CEYLON_REPO}/ceylon/compiler/java/${VERSION}/com.redhat.ceylon.compiler-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=compiler -Dversion=${VERSION} -Dpackaging=jar
+  install-single ceylon-compiler -Dfile="${CEYLON_REPO}/com/redhat/ceylon/compiler/java/${VERSION}/com.redhat.ceylon.compiler-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=compiler -Dversion=${VERSION} -Dpackaging=jar
 
-  install-single ceylon-compiler -Dfile="${CEYLON_REPO}/ceylon/ant/${VERSION}/com.redhat.ceylon.ant-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=ant -Dversion=${VERSION} -Dpackaging=jar
+  install-single ceylon-compiler -Dfile="${CEYLON_REPO}/com/redhat/ceylon/ant/${VERSION}/com.redhat.ceylon.ant-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=ant -Dversion=${VERSION} -Dpackaging=jar
 
   if [ $RETVAL -eq 0 ]; then
     success

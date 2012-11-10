@@ -1,6 +1,5 @@
 package au.com.machinecode.intellij.ceylon.lang.psi.impl;
 
-import au.com.machinecode.intellij.ceylon.lang.psi.api.CeylonExpression;
 import au.com.machinecode.intellij.ceylon.lang.psi.api.CeylonExpressionCase;
 
 /**
