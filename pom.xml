@@ -19,8 +19,13 @@
         <version.com.intellij.openapi>${version.com.intellij}</version.com.intellij.openapi>
         <version.com.intellij.util>${version.com.intellij}</version.com.intellij.util>
         <version.com.redhat.ceylon.typechecker>0.4</version.com.redhat.ceylon.typechecker>
-        <version.org.apache.maven.plugins.maven-checkstyle-plugin>2.9.1</version.org.apache.maven.plugins.maven-checkstyle-plugin>
+        <version.org.apache.maven.plugins.maven-checkstyle-plugin>2.9.1
+        </version.org.apache.maven.plugins.maven-checkstyle-plugin>
         <version.org.antlr.antlr-runtime>3.4</version.org.antlr.antlr-runtime>
+        <version.xerces.xerces>2.4.0</version.xerces.xerces>
+
+        <version.junit.junit>4.10</version.junit.junit>
+        <version.org.jdom.jdom>2.0.2</version.org.jdom.jdom>
     </properties>
 
     <dependencyManagement>
@@ -60,6 +65,26 @@
                 <artifactId>antlr-runtime</artifactId>
                 <version>${version.org.antlr.antlr-runtime}</version>
             </dependency>
+            <dependency>
+                <groupId>org.jdom</groupId>
+                <artifactId>jdom</artifactId>
+                <version>${version.org.jdom.jdom}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xerces</groupId>
+                <artifactId>xerces</artifactId>
+                <version>${version.xerces.xerces}</version>
+            </dependency>
+
+            <!-- Test dependencies-->
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit.junit}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -96,6 +121,24 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xerces</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test dependencies-->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -14,6 +14,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CeylonParserM1 implements PsiParser, CeylonTokenTypes, CeylonElementTypes {
 
+    public static final CeylonParserM1 INSTANCE = new CeylonParserM1();
+
     /*
      * Main entry point
      */

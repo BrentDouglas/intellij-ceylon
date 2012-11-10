@@ -9,7 +9,6 @@ public class OperatorParser {
 
     public static boolean parseIncrementOrDecrement(final PsiBuilder builder) {
         return true;
-
     }
 
     public static boolean parseOperatorExpression(final PsiBuilder builder) {

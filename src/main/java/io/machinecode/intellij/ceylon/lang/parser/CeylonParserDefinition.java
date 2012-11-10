@@ -1,5 +1,7 @@
 package io.machinecode.intellij.ceylon.lang.parser;
 
+import com.intellij.ide.util.PropertiesComponent;
+import io.machinecode.intellij.ceylon.CeylonLanguageLevel;
 import io.machinecode.intellij.ceylon.lang.lexer.CeylonLexer;
 import io.machinecode.intellij.ceylon.lang.lexer.CeylonTokenSets;
 import io.machinecode.intellij.ceylon.lang.psi.CeylonPsiCreator;
@@ -27,11 +29,19 @@ public class CeylonParserDefinition implements ParserDefinition {
 
     @NotNull
     public Lexer createLexer(final Project project) {
-        return new CeylonLexer();
+        return CeylonLanguageLevel.valueOf(
+                PropertiesComponent.getInstance(project).getValue(
+                        CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M4.name()
+                )
+        ).getLexer();
     }
 
     public PsiParser createParser(final Project project) {
-        return new CeylonParserM1();
+        return CeylonLanguageLevel.valueOf(
+                PropertiesComponent.getInstance(project).getValue(
+                        CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M4.name()
+                )
+        ).getParser();
     }
 
     public IFileElementType getFileNodeType() {
