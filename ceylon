@@ -7,11 +7,18 @@ path=$PATH
 source /etc/init.d/functions
 export PATH="${path}"
 
+GREEN="\033[32m"
+RED="\033[31m"
+RESET="\033[00m"
+
 WORK_DIR="${WORK_DIR-${HOME}/work}"
-RETVAL=0
+CEYLON_REPO="${CEYLON_REPO-${HOME}/.ceylon/repo}"
 
 checkout() {
   local VERSION=${1}
+  shift
+
+  echo -e "${GREEN}Checking out ${VERSION}${RESET}"
 
   cd ${WORK_DIR}
 
@@ -39,6 +46,14 @@ checkout() {
     git clone git://github.com/ceylon/ceylon-compiler.git ceylon-compiler
   }
 
+  [ -d ceylon-js ] || {
+    git clone git://github.com/ceylon/ceylon-js.git ceylon-js
+  }
+
+  [ -d ceylon-dist ] || {
+    git clone git://github.com/ceylon/ceylon-dist.git ceylon-dist
+  }
+
   cd ${WORK_DIR}/ceylon-common
   git checkout ${VERSION}
 
@@ -56,44 +71,47 @@ checkout() {
 
   cd ${WORK_DIR}/ceylon-compiler
   git checkout ${VERSION}
+
+  cd ${WORK_DIR}/ceylon-js
+  git checkout ${VERSION}
+
+  cd ${WORK_DIR}/ceylon-dist
+  git checkout ${VERSION}
+}
+
+run-single() {
+  local MODULE="${1}"
+  shift
+  local TARGETS="${@}"
+
+  [ ${RETVAL} -eq 0 ] && {
+    echo -e "${GREEN}Running \"ant ${TARGETS}\" for ${MODULE}${RESET}"
+    cd ${WORK_DIR}/${MODULE}
+    ant ${TARGETS}
+    RETVAL=${?}
+  }
+  [ ${RETVAL} -eq 0 ] || echo -e "${RED}Failed running \"ant ${TARGETS}\" for ${MODULE}${RESET}"
 }
 
 build() {
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-common
-    ant clean publish
-    RETVAL=${?}
-  }
+  local LAST=
+  echo -e "${GREEN}Building${RESET}"
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon.language
-    ant clean publish
-    RETVAL=${?}
-  }
+  run-single ceylon-common clean publish
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-module-resolver
-    ant clean publish
-    RETVAL=${?}
-  }
+  run-single ceylon.language clean publish
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-spec
-    ant clean publish
-    RETVAL=${?}
-  }
+  run-single ceylon-module-resolver clean publish
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-runtime
-    ant clean publish
-    RETVAL=${?}
-  }
+  run-single ceylon-spec clean publish
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-compiler
-    ant clean publish
-    RETVAL=${?}
-  }
+  run-single ceylon-runtime clean publish
+
+  run-single ceylon-compiler clean publish
+
+  run-single ceylon-js clean publish
+
+  run-single ceylon-dist publish-all
 
   if [ $RETVAL -eq 0 ]; then
     success
@@ -104,41 +122,23 @@ build() {
 }
 
 test() {
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-common
-    ant test
-    RETVAL=${?}
-  }
+  echo -e "${GREEN}Testing${RESET}"
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon.language
-    ant test
-    RETVAL=${?}
-  }
+  run-single ceylon-common test
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-module-resolver
-    ant test
-    RETVAL=${?}
-  }
+  run-single ceylon.language test
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-spec
-    ant test
-    RETVAL=${?}
-  }
+  run-single ceylon-module-resolver test
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-runtime
-    ant test
-    RETVAL=${?}
-  }
+  run-single ceylon-spec test
 
-  [ ${RETVAL} -eq 0 ] && {
-    cd ${WORK_DIR}/ceylon-compiler
-    ant test
-    RETVAL=${?}
-  }
+  run-single ceylon-runtime test
+
+  run-single ceylon-compiler test
+
+  run-single ceylon-js test
+
+  run-single ceylon-dist test
 
   if [ $RETVAL -eq 0 ]; then
     success
@@ -148,29 +148,131 @@ test() {
   return $RETVAL
 }
 
-CMD="${1}"
-shift
+install-single() {
+  local MODULE="${1}"
+  shift
+  local MAVEN="mvn install:install-file ${@}"
 
-case ${CMD} in
-  checkout)
-    checkout ${1}
-    ;;
+  [ ${RETVAL} -eq 0 ] && {
+    echo -e "${GREEN}Running \"${MAVEN}\" for ${MODULE}${RESET}"
+    cd ${WORK_DIR}/${MODULE}
+    ${MAVEN}
+    RETVAL=${?}
+  }
+  [ ${RETVAL} -eq 0 ] || echo -e "${RED}Failed running \"${MAVEN}\" for ${MODULE}${RESET}"
 
-  build)
-    [ -z ${1} ] || checkout ${1}
-    build
-    ;;
+  return ${RETVAL}
+}
 
-  test)
-    [ -z ${1} ] || checkout ${1}
-    test
-    ;;
+install() {
+  local VERSION=${1}
+  shift
 
-  *)
-    echo "Usage: $0 { checkout ref | build [ref] | test [ref] }"
-    RETVAL=${INVALID_ARGUMENT}
-    ;;
-esac
+  echo -e "${GREEN}Installing${RESET}"
+
+  install-single ceylon.runtime -Dfile="${CEYLON_REPO}/ceylon/runtime/${VERSION}/ceylon.runtime-${VERSION}.jar" -DgroupId=ceylon -DartifactId=runtime -Dversion=${VERSION} -Dpackaging=jar
+
+  install-single ceylon-common -Dfile="${CEYLON_REPO}/ceylon/common/${VERSION}/com.redhat.ceylon.common-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=common -Dversion=${VERSION} -Dpackaging=jar
+
+  install-single ceylon-module-resolver -Dfile="${CEYLON_REPO}/ceylon/module-resolver/${VERSION}/com.redhat.ceylon.module-resolver-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=module-resolver -Dversion=${VERSION} -Dpackaging=jar
+
+  install-single ceylon-spec -Dfile="${CEYLON_REPO}/ceylon/typechecker/${VERSION}/com.redhat.ceylon.typechecker-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=typechecker -Dversion=${VERSION} -Dpackaging=jar
+
+  install-single ceylon-compiler -Dfile="${CEYLON_REPO}/ceylon/compiler/java/${VERSION}/com.redhat.ceylon.compiler-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=compiler -Dversion=${VERSION} -Dpackaging=jar
+
+  install-single ceylon-compiler -Dfile="${CEYLON_REPO}/ceylon/ant/${VERSION}/com.redhat.ceylon.ant-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=ant -Dversion=${VERSION} -Dpackaging=jar
+
+  if [ $RETVAL -eq 0 ]; then
+    success
+  else
+    failure
+  fi
+  return $RETVAL
+}
+
+usage() {
+  echo "Usage: $0 { [checkout] [build] [install] [test] [ref] }"
+}
+
+RETVAL=0
+
+CHECKOUT=1
+BUILD=1
+INSTALL=1
+TEST=1
+
+REF=""
+
+for CMD in "${@}"
+do
+  case ${CMD} in
+    c|checkout)
+      CHECKOUT=0
+      shift
+      ;;
+    b|build)
+      BUILD=0
+      shift
+      ;;
+    i|install)
+      INSTALL=0
+      shift
+      ;;
+    t|test)
+      TEST=0
+      shift
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *)
+      REF=${1}
+      shift
+      [ -z ${1} ] || {
+        usage
+        RETVAL=64
+        break
+      }
+      ;;
+  esac
+done
+
+CHECKED_OUT=1
+
+[ ${RETVAL} -eq 0 ] && [ ${CHECKOUT} -eq 0 ] && {
+  [ -n "${REF}" ] || {
+    usage
+    exit 1
+  }
+  checkout ${REF}
+  RETVAL=${?}
+  CHECKED_OUT=0
+}
+
+[ ${RETVAL} -eq 0 ] && [ ${CHECKED_OUT} -eq 1 ] && [ -n "${REF}" ] && {
+  checkout ${REF}
+  RETVAL=${?}
+}
+
+[ ${RETVAL} -eq 0 ] && [ ${BUILD} -eq 0 ] && {
+  build
+  RETVAL=${?}
+}
+
+[ ${RETVAL} -eq 0 ] && [ ${TEST} -eq 0 ] && {
+  test
+  RETVAL=${?}
+}
+
+[ ${RETVAL} -eq 0 ] && [ ${INSTALL} -eq 0 ] && {
+  [ -n "${REF}" ] || {
+    usage
+    exit 1
+  }
+  install ${REF}
+  RETVAL=${?}
+}
 
 echo ""
 
