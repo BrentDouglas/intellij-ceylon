@@ -1,23 +1,31 @@
 <idea-plugin version="2">
-  <name>Ceylon</name>
-  <description>Plugin for Ceylon</description>
-  <version>1.0</version>
-  <vendor>Brent Douglas</vendor>
-  <idea-version since-build="8000"/>
+    <name>Ceylon</name>
+    <id>io.machinecode.intellij.ceylon</id>
+    <description>Plugin for Ceylon</description>
+    <category>Custom Languages</category>
+    <version>1.0</version>
+    <vendor>Brent Douglas</vendor>
+    <idea-version since-build="8000"/>
 
-  <application-components>
-    <!-- Add your application components here -->
-  </application-components>
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
 
-  <project-components>
-    <!-- Add your project components here -->
-  </project-components>
+    <project-components>
+        <!-- Add your project components here -->
+    </project-components>
 
-  <actions>
-    <!-- Add your actions here -->
-  </actions>
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+    <extensionPoints>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    </extensionPoints>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+        <testFramework implementation="io.machinecode.intellij.ceylon.CeylonTestFramework"/>
+
+        <lang.parserDefinition language="Ceylon" implementationClass="io.machinecode.intellij.ceylon.lang.parser.CeylonParserDefinition"/>
+    </extensions>
 </idea-plugin>

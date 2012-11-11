@@ -2,6 +2,7 @@ package io.machinecode.intellij.ceylon.m1;
 
 import com.intellij.psi.impl.DebugUtil;
 import io.machinecode.intellij.ceylon.CeylonTestCase;
+import io.machinecode.intellij.ceylon.lang.CeylonElementTypes;
 import org.junit.Test;
 
 /**
@@ -11,15 +12,16 @@ public class M1ParserTest extends CeylonTestCase {
 
     @Override
     public String getResourceDirectory() {
-        return "parser";
+        return "parser/m1";
     }
 
   public void parse(String fileName) {
-    System.out.println(DebugUtil.psiToString(getPsiFileFromFile(getProject(), fileName), false));
+    System.out.println(DebugUtil.psiToString(getPsiFileFromFile(fileName), false));
   }
 
     @Test
     public void testUnionType() {
-        parse("uniontype.ceylon");
+        getPsiElementFromFile("uniontype.ceylon", CeylonElementTypes.TYPE);
+        //parse("uniontype.ceylon");
     }
 }

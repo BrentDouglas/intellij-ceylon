@@ -6,6 +6,7 @@ import org.jetbrains.annotations.PropertyKey;
 
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -13,7 +14,7 @@ import java.util.ResourceBundle;
  */
 public class CeylonBundle {
     @NonNls
-    private static final String BUNDLE = "CeylonBundle";
+    private static final String BUNDLE = "io.machinecode.intellij.ceylon.CeylonBundle";
 
     private static final Reference<ResourceBundle> bundle = new SoftReference<ResourceBundle>(ResourceBundle.getBundle(BUNDLE));
 
