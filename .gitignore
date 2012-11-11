@@ -15,3 +15,6 @@
 
 # maven
 target
+
+# joe / jflex
+*.*~

@@ -73,6 +73,6 @@ public class CeylonParserDefinition implements ParserDefinition {
     }
 
     public SpaceRequirements spaceExistanceTypeBetweenTokens(final ASTNode left, final ASTNode right) {
-        return LanguageUtil.canStickTokensTogetherByLexer(left, right, new CeylonLexer());
+        return LanguageUtil.canStickTokensTogetherByLexer(left, right, createLexer(left.getPsi().getProject()));
     }
 }

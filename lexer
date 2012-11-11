@@ -1,0 +1,11 @@
+#!/bin/bash
+
+create-lexer() {
+  local JFLEX_FILE=${1}
+  ${HOME}/work/intellij-community/tools/lexer/jflex-1.4/bin/jflex ${HOME}/work/intellij-ceylon/src/main/java/io/machinecode/intellij/ceylon/lang/lexer/${JFLEX_FILE} --charat --skel ${HOME}/work/intellij-community/tools/lexer/idea-flex.skeleton
+}
+
+create-lexer ceylon_m1.jflex
+create-lexer ceylon_m2.jflex
+create-lexer ceylon_m3.jflex
+create-lexer ceylon_m4.jflex
