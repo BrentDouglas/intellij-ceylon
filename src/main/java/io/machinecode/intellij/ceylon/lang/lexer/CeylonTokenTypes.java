@@ -129,7 +129,7 @@ public interface CeylonTokenTypes extends TokenType {
 
     CeylonTokenType LOWERCASE_IDENTIFIER = new CeylonTokenType("Lowercase identifier");
     CeylonTokenType UPPERCASE_IDENTIFIER = new CeylonTokenType("Uppercase identifier");
-    CeylonTokenType PACKAGE_IDENTIFIER = new CeylonTokenType("Package identifier");
+    CeylonTokenType PACKAGE_IDENTIFIER = new CeylonTokenType("Package identifier");        //0.1 - 0.3
 
     CeylonTokenType BAD_CHARACTER = new CeylonTokenType("Bad character");
 }

@@ -26,7 +26,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         if (root == ABBREVIATION) parseAbbreviation(builder);
         if (root == ABBREVIATED_TYPE) parseAbbreviatedType(builder);
         if (root == ABSTRACTED_TYPE) parseAbstractedType(builder);
-        if (root == ADAPTED_TYPES) parseAdaptedTypes(builder);
+        //if (root == ADAPTED_TYPES) parseAdaptedTypes(builder);
         if (root == ANNOTATION) parseAnnotation(builder);
         if (root == ARGUMENTS) parseArguments(builder);
         if (root == ASSIGNMENT) parseAssignment(builder);
@@ -104,7 +104,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         if (root == MEMBER_NAME) parseMemberName(builder);
         if (root == MEMBER_REFERENCE) parseMemberReference(builder);
         if (root == META) parseMeta(builder);
-        if (root == META_TYPES) parseMetaTypes(builder);
+        //if (root == META_TYPES) parseMetaTypes(builder);
         if (root == METHOD_ATTRIBUTE_ALIAS) parseMethodAttributeAlias(builder);
         if (root == METHOD_HEADER) parseMethodHeader(builder);
         if (root == METHOD) parseMethod(builder);
@@ -169,11 +169,6 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         if (root == VARIANCE) parseVariance(builder);
         if (root == WHILE) parseWhile(builder);
 
-        if (root == EXPRESSION_CASE) parseExpressionCase(builder);
-        if (root == IS_CASE) parseIsCase(builder);
-        if (root == SATISFIES_CASE) parseSatisfiesCase(builder);
-
-        if (root == RESOURCE_DECLARATION) parseResourceDeclaration(builder);
         marker.done(root);
         return builder.getTreeBuilt();
     }
@@ -225,8 +220,10 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * PROPOSAL
      * AdaptedTypes: "adapts" Type ("&" Type)*
      */
+    /*
     public static boolean parseAdaptedTypes(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, ADAPTS_KEYWORD)) {
@@ -244,6 +241,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         marker.done(ADAPTED_TYPES);
         return true;
     }
+    */
 
     /*
      * Annotation: MemberName ( Arguments | Literal+ )?
@@ -512,13 +510,38 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * Case: ExpressionCase | IsCase | SatisfiesCase
+     * Case: Expression ("," Expression)* | "is" UnionType | "satisfies" Type
      */
     public static boolean parseCase(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (parseExpressionCase(builder)
-                && !parseIsCase(builder)
-                && !parseSatisfiesCase(builder)) {
+        if (parseExpressionCase(builder)) {
+            boolean found = false;
+            while (find(builder, COMMA_OPERATOR)) {
+                found = true;
+                if (!parseExpression(builder)) {
+                    builder.error(CeylonBundle.message("expected.expression"));
+                }
+            }
+            if (!found) {
+                if (find(builder, IS_KEYWORD)) {
+                    found = true;
+                    if (!parseUnionType(builder)) {
+                        builder.error(CeylonBundle.message("expected.uniontype"));
+                    }
+                }
+            }
+            if (!found) {
+                if (find(builder, SATISFIES_KEYWORD)) {
+                    found = true;
+                    if (!parseType(builder)) {
+                        builder.error(CeylonBundle.message("expected.type"));
+                    }
+                }
+            }
+            if (!found) {
+                builder.error(CeylonBundle.message("expected.expressionorisorsatisfies"));
+            }
+        } else {
             marker.rollbackTo();
             return false;
         }
@@ -681,13 +704,14 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                              PROPOSAL
      * ClassInheritance: CaseTypes? Metatypes? ExtendedType? SatisfiedTypes?
      */
     public static boolean parseClassInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
-        parseAdaptedTypes(builder);
+        //parseMetaTypes(builder);
+        parseExtendedType(builder);
         parseSatisfiedTypes(builder);
         marker.done(CLASS_INHERITANCE);
         return true;
@@ -1418,13 +1442,14 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                  PROPOSAL   PROPOSAL
      * InterfaceInheritance: CaseTypes? MetaTypes? AdaptedTypes? SatisfiedTypes?
      */
     public static boolean parseInterfaceInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
-        parseAdaptedTypes(builder);
+        //parseMetaTypes(builder);
+        //parseAdaptedTypes(builder);
         parseSatisfiedTypes(builder);
         marker.done(INTERFACE_INHERITANCE);
         return true;
@@ -1463,22 +1488,6 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             return false;
         }
         marker.done(INVOCATION);
-        return true;
-    }
-
-    /*
-     * IsCase: "is" UnionType
-     */
-    public static boolean parseIsCase(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, IS_KEYWORD)) {
-            marker.rollbackTo();
-            return false;
-        }
-        if (!parseUnionType(builder)) {
-            builder.error(CeylonBundle.message("expected.uniontype"));
-        }
-        marker.done(IS_CASE);
         return true;
     }
 
@@ -1622,8 +1631,10 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * PROPOSAL
      * Metatypes: "is" Type ("&" Type)*
      */
+    /*
     public static boolean parseMetaTypes(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, IS_KEYWORD)) {
@@ -1641,6 +1652,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         marker.done(META_TYPES);
         return true;
     }
+     */
 
     /*
      * Method: Annotation* MethodHeader (Block | NamedArguments | Specifier? ";")
@@ -1682,6 +1694,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                                                                PROPOSAL
      * MethodHeader: (UnionType | "function" | "void") MemberName TypeParams? Params+ Metatypes? TypeConstraints?
      */
     public static boolean parseMethodHeader(final PsiBuilder builder) {
@@ -1704,7 +1717,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         } else {
             builder.error(CeylonBundle.message("expected.params"));
         }
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseTypeConstraints(builder);
         marker.done(METHOD_HEADER);
         return true;
@@ -2012,23 +2025,6 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * ResourceDeclaration: "(" Resource ")"
-     */
-    public static boolean parseResourceDeclaration(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, LEFT_PARENTHESIS_OPERATOR)) {
-            marker.rollbackTo();
-            return false;
-        }
-        if (!parseResource(builder)) {
-            builder.error(CeylonBundle.message("expected.resource"));
-        }
-        require(builder, RIGHT_PARENTHESIS_OPERATOR, CeylonBundle.message("expected.rightparenthesis"));
-        marker.done(RESOURCE_DECLARATION);
-        return true;
-    }
-
-    /*
      * Return: "return" Expression?
      */
     public static boolean parseReturn(final PsiBuilder builder) {
@@ -2060,22 +2056,6 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             }
         }
         marker.done(SATISFIED_TYPES);
-        return true;
-    }
-
-    /*
-     * SatisfiesCase: "satisfies" Type
-     */
-    public static boolean parseSatisfiesCase(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, SATISFIES_KEYWORD)) {
-            marker.rollbackTo();
-            return false;
-        }
-        if (!parseType(builder)) {
-            builder.error(CeylonBundle.message("expected.type"));
-        }
-        marker.done(SATISFIES_CASE);
         return true;
     }
 
@@ -2394,7 +2374,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * Try: "try" (ResourceDeclaration)? Block
+     * Try: "try" ("(" Resource ")")? Block
      */
     public static boolean parseTry(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -2402,7 +2382,14 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        parseResourceDeclaration(builder);
+
+        if (find(builder, LEFT_PARENTHESIS_OPERATOR)) {
+            if (!parseResource(builder)) {
+                builder.error(CeylonBundle.message("expected.resource"));
+            }
+            require(builder, RIGHT_PARENTHESIS_OPERATOR, CeylonBundle.message("expected.rightparenthesis"));
+        }
+
         if (!parseBlock(builder)) {
             builder.error(CeylonBundle.message("expected.block"));
         }
@@ -2502,12 +2489,13 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                       PROPOSAL
      * TypeConstraintInheritance: CaseTypes? Metatypes? SatisfiedTypes? AbstractedType?
      */
     public static boolean parseTypeConstraintInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseSatisfiedTypes(builder);
         parseAbstractedType(builder);
         marker.done(TYPE_CONSTRAINT_INHERITANCE);

@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
  */
-public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementTypes {
+public class CeylonParserM2 extends CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementTypes {
 
-    public static final CeylonParserM4 INSTANCE = new CeylonParserM4();
+    public static final CeylonParserM2 INSTANCE = new CeylonParserM2();
 
     /*
      * Main entry point
@@ -26,7 +26,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (root == ABBREVIATION) parseAbbreviation(builder);
         if (root == ABBREVIATED_TYPE) parseAbbreviatedType(builder);
         if (root == ABSTRACTED_TYPE) parseAbstractedType(builder);
-        if (root == ADAPTED_TYPES) parseAdaptedTypes(builder);
+        //if (root == ADAPTED_TYPES) parseAdaptedTypes(builder); PROPOSED
         if (root == ANNOTATION) parseAnnotation(builder);
         if (root == ARGUMENTS) parseArguments(builder);
         if (root == ASSIGNMENT) parseAssignment(builder);
@@ -75,7 +75,6 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (root == FOR_ITERATOR) parseForIterator(builder);
         if (root == FOR) parseFor(builder);
         if (root == FULL_PACKAGE_NAME) parseFullPackageName(builder);
-        if (root == FUNCTION) parseFunction(builder);
         if (root == FUNCTIONAL_ARGUMENTS) parseFunctionalArguments(builder);
         if (root == FUNCTIONAL_BODY) parseFunctionalBody(builder);
         if (root == FUNCTIONAL_NAMED_ARGUMENT) parseFunctionalNamedArgument(builder);
@@ -105,7 +104,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (root == MEMBER_NAME) parseMemberName(builder);
         if (root == MEMBER_REFERENCE) parseMemberReference(builder);
         if (root == META) parseMeta(builder);
-        if (root == META_TYPES) parseMetaTypes(builder);
+        //if (root == META_TYPES) parseMetaTypes(builder); PROPOSED
         if (root == METHOD_ATTRIBUTE_ALIAS) parseMethodAttributeAlias(builder);
         if (root == METHOD_HEADER) parseMethodHeader(builder);
         if (root == METHOD) parseMethod(builder);
@@ -117,12 +116,12 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (root == OBJECT_INHERITANCE) parseObjectInheritance(builder);
         if (root == OBJECT) parseObject(builder);
         if (root == OPERATOR_EXPRESSION) OperatorParser.parseOperatorExpression(builder);
+        //if (root == OPERATOR) parseOperator(builder);
         if (root == PACKAGE_NAME) parsePackageName(builder);
         if (root == PARAM) parseParam(builder);
-        if (root == PARAMETER_TYPES) parseParameterTypes(builder);
+        //if (root == PARAMETER_TYPES) parseParameterTypes(builder);
         if (root == PARAMS) parseParams(builder);
         if (root == PAR_EXPRESSION) parseParExpression(builder);
-        if (root == POSITIONAL_ARGUMENT) parsePositionalArgument(builder);
         if (root == POSITIONAL_ARGUMENTS) parsePositionalArguments(builder);
         if (root == PRIMARY) parsePrimary(builder);
         if (root == RECEIVER) parseReciever(builder);
@@ -189,7 +188,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * AbbreviatedType: Type (Abbreviation | ParameterTypes)*
+     * AbbreviatedType: Type Abbreviation*
      */
     public static boolean parseAbbreviatedType(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -197,8 +196,8 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        while (parseAbbreviation(builder)
-                || parseParameterTypes(builder)) {
+        while (parseAbbreviation(builder)) {
+            //
         }
         marker.done(ABBREVIATED_TYPE);
         return true;
@@ -221,8 +220,10 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * PROPOSAL
      * AdaptedTypes: "adapts" Type ("&" Type)*
      */
+    /*
     public static boolean parseAdaptedTypes(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, ADAPTS_KEYWORD)) {
@@ -240,6 +241,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         marker.done(ADAPTED_TYPES);
         return true;
     }
+    */
 
     /*
      * Annotation: MemberName ( Arguments | Literal+ )?
@@ -490,7 +492,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
      */
     public static boolean parseCallableVariable(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (!parseUnionType(builder)) {
+        if (parseUnionType(builder)) {
             find(builder, VOID_KEYWORD);
         }
         if (!parseMemberName(builder)) {
@@ -512,25 +514,37 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
      */
     public static boolean parseCase(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (parseExpression(builder)) {
-            while (find(builder, COMMA_OPERATOR) && parseExpression(builder)) {
-                //
+        if (parseExpressionCase(builder)) {
+            boolean found = false;
+            while (find(builder, COMMA_OPERATOR)) {
+                found = true;
+                if (!parseExpression(builder)) {
+                    builder.error(CeylonBundle.message("expected.expression"));
+                }
             }
-        } else if (find(builder, IS_KEYWORD)) {
-            if (!parseUnionType(builder)) {
-                marker.rollbackTo();
-                return false;
+            if (!found) {
+                if (find(builder, IS_KEYWORD)) {
+                    found = true;
+                    if (!parseUnionType(builder)) {
+                        builder.error(CeylonBundle.message("expected.uniontype"));
+                    }
+                }
             }
-        } else if (find(builder, SATISFIES_KEYWORD)) {
-            if (!parseType(builder)) {
-                marker.rollbackTo();
-                return false;
+            if (!found) {
+                if (find(builder, SATISFIES_KEYWORD)) {
+                    found = true;
+                    if (!parseType(builder)) {
+                        builder.error(CeylonBundle.message("expected.type"));
+                    }
+                }
+            }
+            if (!found) {
+                builder.error(CeylonBundle.message("expected.expressionorisorsatisfies"));
             }
         } else {
             marker.rollbackTo();
             return false;
         }
-
         marker.done(CASE);
         return true;
     }
@@ -690,12 +704,13 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                              PROPOSED
      * ClassInheritance: CaseTypes? Metatypes? ExtendedType? SatisfiedTypes?
      */
     public static boolean parseClassInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseExtendedType(builder);
         parseSatisfiedTypes(builder);
         marker.done(CLASS_INHERITANCE);
@@ -950,6 +965,24 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * ExpressionCase: Expression ("," Expression)*
+     */
+    public static boolean parseExpressionCase(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseExpression(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        while (find(builder, COMMA_OPERATOR)) {
+            if (!parseExpression(builder)) {
+                builder.error(CeylonBundle.message("expected.expression"));
+            }
+        }
+        marker.done(EXPRESSION_CASE);
+        return true;
+    }
+
+    /*
      * ExpressionStatement: ( Assignment | IncrementOrDecrement | Invocation ) ";"
      */
     public static boolean parseExpressionStatement(final PsiBuilder builder) {
@@ -1086,25 +1119,6 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             }
         }
         marker.done(FULL_PACKAGE_NAME);
-        return true;
-    }
-
-    /*
-    * Function: ("function" | "void")? Params+ Expression
-    */
-    public static boolean parseFunction(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, FUNCTION_KEYWORD)) {
-            find(builder, VOID_KEYWORD);
-        }
-        if (!parseParams(builder)) {
-            marker.rollbackTo();
-            return false;
-        }
-        if (!parseExpression(builder)) {
-            builder.error(CeylonBundle.message("expected.expression"));
-        }
-        marker.done(FUNCTION);
         return true;
     }
 
@@ -1308,7 +1322,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * ImportTypeElement: TypeAlias? TypeName ("{" ImportElements? "}")?
+     * ImportTypeElement: TypeAlias? TypeName
      */
     public static boolean parseImportTypeElement(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -1316,13 +1330,6 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (!parseTypeName(builder)) {
             marker.rollbackTo();
             return false;
-        }
-        final PsiBuilder.Marker second = builder.mark();
-        if (find(builder, LEFT_BRACE_OPERATOR)) {
-            parseImportElements(builder);
-            if (!find(builder, RIGHT_BRACE_OPERATOR)) {
-                second.rollbackTo();
-            }
         }
         marker.done(IMPORT_TYPE_ELEMENT);
         return true;
@@ -1434,14 +1441,14 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         return true;
     }
 
-    /*
+    /*                                  PROPOSED   PROPOSED
      * InterfaceInheritance: CaseTypes? MetaTypes? AdaptedTypes? SatisfiedTypes?
      */
     public static boolean parseInterfaceInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
-        parseAdaptedTypes(builder);
+        //parseMetaTypes(builder);
+        //parseAdaptedTypes(builder);
         parseSatisfiedTypes(builder);
         marker.done(INTERFACE_INHERITANCE);
         return true;
@@ -1623,8 +1630,10 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * PROPOSAL
      * Metatypes: "is" Type ("&" Type)*
-     */
+    */
+    /*
     public static boolean parseMetaTypes(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, IS_KEYWORD)) {
@@ -1642,9 +1651,10 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         marker.done(META_TYPES);
         return true;
     }
+    */
 
     /*
-     * Method: Annotation* MethodHeader (Block | Specifier? ";")
+     * Method: Annotation* MethodHeader (Block | NamedArguments | Specifier? ";")
      */
     public static boolean parseMethod(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -1656,6 +1666,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             return false;
         }
         if (parseBlock(builder)) {
+        } else if (parseNamedArguments(builder)) {
         } else {
             if (parseSpecifier(builder)) {
                 require(builder, SEMICOLON_OPERATOR, CeylonBundle.message("expected.semicolon"));
@@ -1682,6 +1693,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                                                                PROPOSED
      * MethodHeader: (UnionType | "function" | "void") MemberName TypeParams? Params+ Metatypes? TypeConstraints?
      */
     public static boolean parseMethodHeader(final PsiBuilder builder) {
@@ -1704,7 +1716,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         } else {
             builder.error(CeylonBundle.message("expected.params"));
         }
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseTypeConstraints(builder);
         marker.done(METHOD_HEADER);
         return true;
@@ -1829,11 +1841,11 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * PackageName: LIdentifier
+     * PackageName: PIdentifier
      */
     public static boolean parsePackageName(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, LOWERCASE_IDENTIFIER)) {
+        if (!find(builder, PACKAGE_IDENTIFIER)) {
             marker.rollbackTo();
             return false;
         }
@@ -1842,7 +1854,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * Param: Annotation* (SimpleParam | CallableParam | EntryParamPair) | MemberName
+     * Param: Annotation* (SimpleParam | CallableParam | EntryParamPair)
      */
     public static boolean parseParam(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -1853,38 +1865,9 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
                 && !parseCallableParam(builder)
                 && !parseEntryParamPair(builder)) {
             marker.rollbackTo();
-        }
-        if (parseMemberName(builder)) {
-            marker.rollbackTo();
             return false;
         }
         marker.done(PARAM);
-        return true;
-    }
-
-    /*
-     * ParameterTypes: "(" ( UnionType ("," UnionType)* )? ")"
-     */
-    public static boolean parseParameterTypes(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, LEFT_PARENTHESIS_OPERATOR)) {
-            marker.rollbackTo();
-            return false;
-        }
-        if (parseUnionType(builder)) {
-            while (find(builder, COMMA_OPERATOR)
-                    && parseUnionType(builder)) {
-                //
-            }
-        } else {
-            marker.rollbackTo();
-            return false;
-        }
-        if (!find(builder, RIGHT_PARENTHESIS_OPERATOR)) {
-            marker.rollbackTo();
-            return false;
-        }
-        marker.done(PARAMETER_TYPES);
         return true;
     }
 
@@ -1963,20 +1946,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * PositionalArgument: Expression | Function
-     */
-    public static boolean parsePositionalArgument(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!parseExpression(builder) && !parseFunction(builder)) {
-            marker.rollbackTo();
-            return false;
-        }
-        marker.done(POSITIONAL_ARGUMENT);
-        return true;
-    }
-
-    /*
-     * PositionalArguments: "(" PositionalArgument ("," PositionalArgument)* ("," Sequence)? | Sequence? ")"
+     * PositionalArguments: "(" Expression ("," Expression)* ("," Sequence)? | Sequence? ")"
      */
     public static boolean parsePositionalArguments(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -1984,18 +1954,18 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        if (parsePositionalArgument(builder)) {
+        if (parseExpression(builder)) {
             while (find(builder, COMMA_OPERATOR)) {
-                if (!parsePositionalArgument(builder)) {
+                if (!parseExpression(builder)) {
                     if (parseSequence(builder)) {
                         break;
                     }
-                    builder.error(CeylonBundle.message("expected.positionalargumentorsequence"));
+                    builder.error(CeylonBundle.message("expected.expressionorsequence"));
                 }
             }
         } else if (parseSequence(builder)) {
         } else {
-            builder.error(CeylonBundle.message("expected.positionalargumentorsequence"));
+            builder.error(CeylonBundle.message("expected.expressionorsequence"));
         }
         require(builder, RIGHT_PARENTHESIS_OPERATOR, CeylonBundle.message("expected.rightparenthesis"));
         marker.done(POSITIONAL_ARGUMENTS);
@@ -2054,7 +2024,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * Return: "return" (Expression | Function)?
+     * Return: "return" Expression?
      */
     public static boolean parseReturn(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -2062,9 +2032,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        if (!parseExpression(builder)) {
-            parseFunction(builder);
-        }
+        parseExpression(builder);
         marker.done(RETURN);
         return true;
     }
@@ -2199,7 +2167,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * SequenceInstantiation: "{" Sequence? "}"
+     * SequenceInstantiation = "{" Sequence? "}"
      */
     public static boolean parseSequenceInstantiation(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -2214,7 +2182,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * SimpleAttribute: AttributeHeader (Specifier | Initializer)? ";"
+     * SimpleAttribute: AttributeHeader ( (Specifier | Initializer)? ";" | NamedArguments )
      */
     public static boolean parseSimpleAttribute(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -2224,8 +2192,9 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         }
         if ((parseSpecifier(builder) || parseInitializer(builder))) {
             require(builder, SEMICOLON_OPERATOR, CeylonBundle.message("expected.semicolon"));
+        } else if (parseNamedArguments(builder)) {
         } else {
-            builder.error(CeylonBundle.message("expected.specifierorinitializer"));
+            builder.error(CeylonBundle.message("expected.specifierorinitializerornamedarguments"));
         }
         marker.done(SIMPLE_ATTRIBUTE);
         return true;
@@ -2282,7 +2251,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     * Specifier: "=" (Expression | Function)
+     * Specifier: "=" Expression
      */
     public static boolean parseSpecifier(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
@@ -2290,9 +2259,8 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        if (!parseExpression(builder)
-                && !parseFunction(builder)) {
-            builder.error(CeylonBundle.message("expected.expressionorfunction"));
+        if (!parseExpression(builder)) {
+            builder.error(CeylonBundle.message("expected.expression"));
         }
         marker.done(SPECIFIER);
         return true;
@@ -2413,12 +2381,14 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        final PsiBuilder.Marker second = builder.mark();
+
         if (find(builder, LEFT_PARENTHESIS_OPERATOR)) {
-            if (!parseResource(builder) && find(builder, RIGHT_PARENTHESIS_OPERATOR)) {
-                second.rollbackTo();
+            if (!parseResource(builder)) {
+                builder.error(CeylonBundle.message("expected.resource"));
             }
+            require(builder, RIGHT_PARENTHESIS_OPERATOR, CeylonBundle.message("expected.rightparenthesis"));
         }
+
         if (!parseBlock(builder)) {
             builder.error(CeylonBundle.message("expected.block"));
         }
@@ -2518,12 +2488,13 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                       PROPOSAL
      * TypeConstraintInheritance: CaseTypes? Metatypes? SatisfiedTypes? AbstractedType?
      */
     public static boolean parseTypeConstraintInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseSatisfiedTypes(builder);
         parseAbstractedType(builder);
         marker.done(TYPE_CONSTRAINT_INHERITANCE);
