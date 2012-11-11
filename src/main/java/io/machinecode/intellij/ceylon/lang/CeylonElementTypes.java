@@ -98,7 +98,7 @@ public interface CeylonElementTypes {
     CeylonElementType OPERATOR = new CeylonElementType("");
     CeylonElementType PACKAGE_NAME = new CeylonElementType("");
     CeylonElementType PARAM = new CeylonElementType("");
-    CeylonElementType PARAMETER_TYPES = new CeylonElementType("");
+    CeylonElementType PARAMETER_TYPES = new CeylonElementType("");                   //0.4 - current
     CeylonElementType PARAMS = new CeylonElementType("");
     CeylonElementType PAR_EXPRESSION = new CeylonElementType("");
     CeylonElementType POSITIONAL_ARGUMENT = new CeylonElementType("");               //0.4 - current
@@ -149,9 +149,9 @@ public interface CeylonElementTypes {
     CeylonElementType VARIANCE = new CeylonElementType("");
     CeylonElementType WHILE = new CeylonElementType("");
 
-    CeylonElementType EXPRESSION_CASE = new CeylonElementType("");
-    CeylonElementType IS_CASE = new CeylonElementType("");
-    CeylonElementType SATISFIES_CASE = new CeylonElementType("");
+    CeylonElementType EXPRESSION_CASE = new CeylonElementType("");                // < 0.4
+    CeylonElementType IS_CASE = new CeylonElementType("");                        // < 0.4
+    CeylonElementType SATISFIES_CASE = new CeylonElementType("");                 // < 0.4
 
-    CeylonElementType RESOURCE_DECLARATION = new CeylonElementType("");
+    CeylonElementType RESOURCE_DECLARATION = new CeylonElementType("");           // < 0.4
 }

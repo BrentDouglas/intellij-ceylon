@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
  */
-public class CeylonParserM1 implements PsiParser, CeylonTokenTypes, CeylonElementTypes {
+public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementTypes {
 
     public static final CeylonParserM1 INSTANCE = new CeylonParserM1();
 
@@ -22,38 +22,161 @@ public class CeylonParserM1 implements PsiParser, CeylonTokenTypes, CeylonElemen
     @NotNull
     public ASTNode parse(final IElementType root, final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        parseCompilationUnit(builder);
+
+        if (root == ABBREVIATION) parseAbbreviation(builder);
+        if (root == ABBREVIATED_TYPE) parseAbbreviatedType(builder);
+        if (root == ABSTRACTED_TYPE) parseAbstractedType(builder);
+        if (root == ADAPTED_TYPES) parseAdaptedTypes(builder);
+        if (root == ANNOTATION) parseAnnotation(builder);
+        if (root == ARGUMENTS) parseArguments(builder);
+        if (root == ASSIGNMENT) parseAssignment(builder);
+        if (root == ATOM) parseAtom(builder);
+        if (root == ATTRIBUTE_GETTER) parseAttributeGetter(builder);
+        if (root == ATTRIBUTE_HEADER) parseAttributeHeader(builder);
+        if (root == ATTRIBUTE) parseAttribute(builder);
+        if (root == ATTRIBUTE_META) parseAttributeMeta(builder);
+        if (root == ATTRIBUTE_SETTER) parseAttributeSetter(builder);
+        if (root == BLOCK) parseBlock(builder);
+        if (root == BOOLEAN_CONDITION) parseBooleanCondition(builder);
+        if (root == BREAK) parseBreak(builder);
+        if (root == CALLABLE_PARAM) parseCallableParam(builder);
+        if (root == CALLABLE_REFERENCE) parseCallableReference(builder);
+        if (root == CALLABLE_VARIABLE) parseCallableVariable(builder);
+        if (root == CASE_ITEM) parseCaseItem(builder);
+        if (root == CASE) parseCase(builder);
+        if (root == CASES) parseCases(builder);
+        if (root == CASE_TYPE) parseCaseType(builder);
+        if (root == CASE_TYPES) parseCaseTypes(builder);
+        if (root == CATCH) parseCatch(builder);
+        if (root == CLASS_BODY) parseClassBody(builder);
+        if (root == CLASS_HEADER) parseClassHeader(builder);
+        if (root == CLASS_INHERITANCE) parseClassInheritance(builder);
+        if (root == CLASS) parseClass(builder);
+        if (root == COMPILATION_UNIT) parseCompilationUnit(builder);
+        if (root == CONDITION) parseCondition(builder);
+        if (root == CONTINUE) parseContinue(builder);
+        if (root == CONTROL_STRUCTURE) parseControlStructure(builder);
+        if (root == DECLARATION) parseDeclaration(builder);
+        if (root == DEFAULT_CASE_ITEM) parseDefaultCaseItem(builder);
+        if (root == DEFAULT_PARAM) parseDefaultParam(builder);
+        if (root == DIRECTIVE) parseDirective(builder);
+        if (root == DIRECTIVE_STATEMENT) parseDirectiveStatement(builder);
+        if (root == ELSE) parseElse(builder);
+        if (root == ENTRY_PARAM_PAIR) parseEntryParamPair(builder);
+        if (root == ENTRY_TYPE) parseEntryType(builder);
+        if (root == ENTRY_VARIABLE_PAIR) parseEntryVariablePair(builder);
+        if (root == EXISTS_OR_IS_NONEMPTY_CONDITION) parseExistsOrIsNonEmptyCondition(builder);
+        if (root == EXPRESSION) parseExpression(builder);
+        if (root == EXPRESSION_STATEMENT) parseExpressionStatement(builder);
+        if (root == EXTENDED_TYPE) parseExtendedType(builder);
+        if (root == FAIL) parseFail(builder);
+        if (root == FINALLY) parseFinally(builder);
+        if (root == FOR_FAIL) parseForFail(builder);
+        if (root == FOR_ITERATOR) parseForIterator(builder);
+        if (root == FOR) parseFor(builder);
+        if (root == FULL_PACKAGE_NAME) parseFullPackageName(builder);
+        if (root == FUNCTIONAL_ARGUMENTS) parseFunctionalArguments(builder);
+        if (root == FUNCTIONAL_BODY) parseFunctionalBody(builder);
+        if (root == FUNCTIONAL_NAMED_ARGUMENT) parseFunctionalNamedArgument(builder);
+        if (root == FUNCTION_META) parseFunctionMeta(builder);
+        if (root == IF_ELSE) parseIfElse(builder);
+        if (root == IF) parseIf(builder);
+        if (root == IMPORT_ELEMENT) parseImportElement(builder);
+        if (root == IMPORT_ELEMENTS) parseImportElements(builder);
+        if (root == IMPORT) parseImport(builder);
+        if (root == IMPORT_METHOD_ATTRIBUTE_ELEMENT) parseImportMethodAttributeElement(builder);
+        if (root == IMPORT_TYPE_ELEMENT) parseImportTypeElement(builder);
+        if (root == IMPORT_WILDCARD) parseImportWildcard(builder);
+        if (root == INCREMENT_OR_DECREMENT) OperatorParser.parseIncrementOrDecrement(builder);
+        if (root == INITIALIZER) parseInitializer(builder);
+        if (root == INITIALIZER_REFERENCE) parseInitializerReference(builder);
+        if (root == INTERFACE_BODY) parseInterfaceBody(builder);
+        if (root == INTERFACE_HEADER) parseInterfaceHeader(builder);
+        if (root == INTERFACE_INHERITANCE) parseInterfaceInheritance(builder);
+        if (root == INTERFACE) parseInterface(builder);
+        if (root == INTERSECTION_TYPE) parseIntersectionType(builder);
+        if (root == INVOCATION) parseInvocation(builder);
+        if (root == IS_CONDITION) parseIsCondition(builder);
+        if (root == ITERATOR_VARIABLE) parseIteratorVariable(builder);
+        if (root == LITERAL) parseLiteral(builder);
+        if (root == LOCAL_NAMED_ARGUMENT) parseLocalNamedArgument(builder);
+        if (root == LOOP_CONDITION) parseLoopCondition(builder);
+        if (root == MEMBER_NAME) parseMemberName(builder);
+        if (root == MEMBER_REFERENCE) parseMemberReference(builder);
+        if (root == META) parseMeta(builder);
+        if (root == META_TYPES) parseMetaTypes(builder);
+        if (root == METHOD_ATTRIBUTE_ALIAS) parseMethodAttributeAlias(builder);
+        if (root == METHOD_HEADER) parseMethodHeader(builder);
+        if (root == METHOD) parseMethod(builder);
+        if (root == METHOD_META) parseMethodMeta(builder);
+        if (root == METHOD_REFERENCE) parseMethodReference(builder);
+        if (root == NAMED_ARGUMENT) parseNamedArgument(builder);
+        if (root == NAMED_ARGUMENTS) parseNamedArguments(builder);
+        if (root == OBJECT_HEADER) parseObjectHeader(builder);
+        if (root == OBJECT_INHERITANCE) parseObjectInheritance(builder);
+        if (root == OBJECT) parseObject(builder);
+        if (root == OPERATOR_EXPRESSION) OperatorParser.parseOperatorExpression(builder);
+        //if (root == OPERATOR) parseOperator(builder);
+        if (root == PACKAGE_NAME) parsePackageName(builder);
+        if (root == PARAM) parseParam(builder);
+        //if (root == PARAMETER_TYPES) parseParameterTypes(builder);
+        if (root == PARAMS) parseParams(builder);
+        if (root == PAR_EXPRESSION) parseParExpression(builder);
+        if (root == POSITIONAL_ARGUMENTS) parsePositionalArguments(builder);
+        if (root == PRIMARY) parsePrimary(builder);
+        if (root == RECEIVER) parseReciever(builder);
+        if (root == RESOURCE) parseResource(builder);
+        if (root == RETURN) parseReturn(builder);
+        if (root == SATISFIED_TYPES) parseSatisfiedTypes(builder);
+        if (root == SATISFIES_CONDITION) parseSatisfiesCondition(builder);
+        if (root == SELF_REFERENCE) parseSelfReference(builder);
+        if (root == SEQUENCED_PARAM) parseSequencedParam(builder);
+        if (root == SEQUENCED_TYPE) parseSequencedType(builder);
+        if (root == SEQUENCED_TYPE_PARAM) parseSequencedTypeParam(builder);
+        if (root == SEQUENCE_INSTANTIATION) parseSequenceInstantiation(builder);
+        if (root == SEQUENCE) parseSequence(builder);
+        if (root == SIMPLE_ATTRIBUTE) parseSimpleAttribute(builder);
+        if (root == SIMPLE_PARAM) parseSimpleParam(builder);
+        if (root == SPECIFICATION) parseSpecification(builder);
+        if (root == SPECIFIED_NAMED_ARGUMENT) parseSpecifiedNamedArgument(builder);
+        if (root == SPECIFIER) parseSpecifier(builder);
+        if (root == STATEMENT) parseStatement(builder);
+        if (root == STRING_TEMPLATE) parseStringTemplate(builder);
+        if (root == SWITCH_CASE_ELSE) parseSwitchCaseElse(builder);
+        if (root == SWITCH) parseSwitch(builder);
+        if (root == THROW) parseThrow(builder);
+        if (root == TOP_LEVEL_DECLARATION) parseTopLevelDeclaration(builder);
+        if (root == TRY_CATCH_FINALLY) parseTryCatchFinally(builder);
+        if (root == TRY) parseTry(builder);
+        if (root == TYPE_ALIAS) parseTypeAlias(builder);
+        if (root == TYPE_ARGUMENTS) parseTypeArguments(builder);
+        if (root == TYPE_CONSTRAINT) parseTypeConstraint(builder);
+        if (root == TYPE_CONSTRAINTS) parseTypeConstraints(builder);
+        if (root == TYPE_CONSTRAINT_INHERITANCE) parseTypeConstraintInheritance(builder);
+        if (root == TYPE_DECLARATION) parseTypeDeclaration(builder);
+        if (root == TYPED_VARIABLE) parseTypedVariable(builder);
+        if (root == TYPE) parseType(builder);
+        if (root == TYPE_META) parseTypeMeta(builder);
+        if (root == TYPE_NAME) parseTypeName(builder);
+        if (root == TYPE_NAME_WITH_ARGUMENTS) parseTypeNameWithArguments(builder);
+        if (root == TYPE_PARAM) parseTypeParam(builder);
+        if (root == TYPE_PARAMS) parseTypeParams(builder);
+        if (root == TYPE_SPECIFIER) parseTypeSpecifier(builder);
+        if (root == UNION_TYPE) parseUnionType(builder);
+        if (root == VALUE_META) parseValueMeta(builder);
+        if (root == VALUE_REFERENCE) parseValueReference(builder);
+        if (root == VARIABLE) parseVariable(builder);
+        if (root == VARIANCE) parseVariance(builder);
+        if (root == WHILE) parseWhile(builder);
+
+        if (root == EXPRESSION_CASE) parseExpressionCase(builder);
+        if (root == IS_CASE) parseIsCase(builder);
+        if (root == SATISFIES_CASE) parseSatisfiesCase(builder);
+
+        if (root == RESOURCE_DECLARATION) parseResourceDeclaration(builder);
         marker.done(root);
         return builder.getTreeBuilt();
     }
-
-    /*
-     *
-     */
-    public static boolean find(final PsiBuilder builder, final IElementType type) {
-        if (type == builder.getTokenType()) {
-            builder.advanceLexer();
-            return true;
-        }
-        return false;
-    }
-
-    /*
-     *
-     */
-    public static boolean require(final PsiBuilder builder, final IElementType type, final String message) {
-        if (type == builder.getTokenType()) {
-            builder.advanceLexer();
-            return true;
-        } else {
-            builder.error(message);
-            return false;
-        }
-    }
-
-    /*
-     *
-     */
 
     /*
      * Abbreviation: "?" | "[]"
@@ -1770,7 +1893,7 @@ public class CeylonParserM1 implements PsiParser, CeylonTokenTypes, CeylonElemen
             }
         } else if (parseDefaultParam(builder)) {
             boolean foundComma = false;
-            while (foundComma || find(builder, COMMA_OPERATOR)) {
+            while (find(builder, COMMA_OPERATOR) || foundComma) {
                 foundComma = true;
                 if (parseDefaultParam(builder)) {
                     foundComma = false;
@@ -2534,11 +2657,11 @@ public class CeylonParserM1 implements PsiParser, CeylonTokenTypes, CeylonElemen
      */
     public static boolean parseUnionType(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (parseIntersectionType(builder)) {
+        if (!parseIntersectionType(builder)) {
             marker.rollbackTo();
             return false;
         }
-        while (find(builder, INTERSECTION_OPERATOR)) {
+        while (find(builder, UNION_OPERATOR)) {
             if (!parseIntersectionType(builder)) {
                 builder.error(CeylonBundle.message("expected.intersectiontype"));
             }

@@ -4,6 +4,7 @@ import com.intellij.lang.PsiParser;
 import com.intellij.lexer.Lexer;
 import io.machinecode.intellij.ceylon.lang.lexer.CeylonLexer;
 import io.machinecode.intellij.ceylon.lang.parser.CeylonParserM1;
+import io.machinecode.intellij.ceylon.lang.parser.CeylonParserM4;
 
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
@@ -12,7 +13,7 @@ public enum CeylonLanguageLevel {
     M1(CeylonLexer.class, CeylonParserM1.INSTANCE),
     M2(CeylonLexer.class, CeylonParserM1.INSTANCE),
     M3(CeylonLexer.class, CeylonParserM1.INSTANCE),
-    M4(CeylonLexer.class, CeylonParserM1.INSTANCE);
+    M4(CeylonLexer.class, CeylonParserM4.INSTANCE);
 
     public static final String PERSISTENT_STORE_NAME = "CeylonLanguageLevel";
 
