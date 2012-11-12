@@ -1,4 +1,4 @@
-package au.com.machinecode.intellij.ceylon.lang.lexer;
+package io.machinecode.intellij.ceylon.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -7,7 +7,7 @@ import com.intellij.psi.tree.IElementType;
 
 %%
 
-%class _CeylonLexer
+%class _CeylonLexerM1
 %implements FlexLexer
 %function advance
 %type IElementType
@@ -135,57 +135,57 @@ ESCAPE_SEQUENCE=\\[btnfr\\\"\'`]
 <YYINITIAL> "," { return CeylonTokenTypes.COMMA_OPERATOR; }
 <YYINITIAL> ";" { return CeylonTokenTypes.SEMICOLON_OPERATOR; }
 <YYINITIAL> "..." { return CeylonTokenTypes.ELLIPSES_OPERATOR; }
+<YYINITIAL> ".." { return CeylonTokenTypes.RANGE_OPERATOR; }
+<YYINITIAL> ".=" { return CeylonTokenTypes.APPLY_OPERATOR; }
+<YYINITIAL> "." { return CeylonTokenTypes.MEMBER_OPERATOR; }
 <YYINITIAL> "#" { return CeylonTokenTypes.HASH_OPERATOR; }
 <YYINITIAL> "{" { return CeylonTokenTypes.LEFT_BRACE_OPERATOR; }
 <YYINITIAL> "}" { return CeylonTokenTypes.RIGHT_BRACE_OPERATOR; }
 <YYINITIAL> "(" { return CeylonTokenTypes.LEFT_PARENTHESIS_OPERATOR; }
 <YYINITIAL> ")" { return CeylonTokenTypes.RIGHT_PARENTHESIS_OPERATOR; }
+<YYINITIAL> "[]." { return CeylonTokenTypes.SPREAD_OPERATOR; }
+<YYINITIAL> "[]" { return CeylonTokenTypes.ARRAY_OPERATOR; }
 <YYINITIAL> "[" { return CeylonTokenTypes.LEFT_BRACKET_OPERATOR; }
 <YYINITIAL> "]" { return CeylonTokenTypes.RIGHT_BRACKET_OPERATOR; }
-<YYINITIAL> "[]" { return CeylonTokenTypes.ARRAY_OPERATOR; }
-<YYINITIAL> "." { return CeylonTokenTypes.MEMBER_OPERATOR; }
 <YYINITIAL> "?." { return CeylonTokenTypes.SAFE_MEMBER_OPERATOR; }
-<YYINITIAL> "[]." { return CeylonTokenTypes.SPREAD_OPERATOR; }
-<YYINITIAL> "=" { return CeylonTokenTypes.SPECIFY_OPERATOR; }
-<YYINITIAL> "+" { return CeylonTokenTypes.ADD_OPERATOR; }
-<YYINITIAL> "-" { return CeylonTokenTypes.SUBTRACT_OPERATOR; }
-<YYINITIAL> "/" { return CeylonTokenTypes.DIVIDE_OPERATOR; }
-<YYINITIAL> "*" { return CeylonTokenTypes.MULTIPLY_OPERATOR; }
-<YYINITIAL> "%" { return CeylonTokenTypes.MODULO_OPERATOR; }
-<YYINITIAL> "**" { return CeylonTokenTypes.POWER_OPERATOR; }
-<YYINITIAL> "++" { return CeylonTokenTypes.INCREMENT_OPERATOR; }
-<YYINITIAL> "--" { return CeylonTokenTypes.DECREMENT_OPERATOR; }
-<YYINITIAL> ".." { return CeylonTokenTypes.RANGE_OPERATOR; }
-<YYINITIAL> "->" { return CeylonTokenTypes.ENTRY_OPERATOR; }
 <YYINITIAL> "?" { return CeylonTokenTypes.DEFAULT_OPERATOR; }
-<YYINITIAL> "!" { return CeylonTokenTypes.NOT_OPERATOR; }
+<YYINITIAL> "&&=" { return CeylonTokenTypes.AND_ASSIGN_OPERATOR; }
 <YYINITIAL> "&&" { return CeylonTokenTypes.AND_OPERATOR; }
+<YYINITIAL> "||=" { return CeylonTokenTypes.OR_ASSIGN_OPERATOR; }
 <YYINITIAL> "||" { return CeylonTokenTypes.OR_OPERATOR; }
-<YYINITIAL> "~" { return CeylonTokenTypes.COMPLEMENT_OPERATOR; }
-<YYINITIAL> "&" { return CeylonTokenTypes.INTERSECTION_OPERATOR; }
+<YYINITIAL> "|=" { return CeylonTokenTypes.UNION_ASSIGN_OPERATOR; }
 <YYINITIAL> "|" { return CeylonTokenTypes.UNION_OPERATOR; }
-<YYINITIAL> "^" { return CeylonTokenTypes.XOR_OPERATOR; }
 <YYINITIAL> "===" { return CeylonTokenTypes.IDENTICAL_OPERATOR; }
 <YYINITIAL> "==" { return CeylonTokenTypes.EQUAL_OPERATOR; }
+<YYINITIAL> "=" { return CeylonTokenTypes.SPECIFY_OPERATOR; }
 <YYINITIAL> "!=" { return CeylonTokenTypes.NOT_EQUAL_OPERATOR; }
-<YYINITIAL> "<" { return CeylonTokenTypes.LESS_THAN_OPERATOR; }
-<YYINITIAL> ">" { return CeylonTokenTypes.GREATER_THAN_OPERATOR; }
-<YYINITIAL> "<=" { return CeylonTokenTypes.LESS_THAN_OR_EQUAL_TO_OPERATOR; }
-<YYINITIAL> ">=" { return CeylonTokenTypes.GREATER_THAN_OR_EQUAL_TO_OPERATOR; }
+<YYINITIAL> "!" { return CeylonTokenTypes.NOT_OPERATOR; }
 <YYINITIAL> "<=>" { return CeylonTokenTypes.COMPARE_OPERATOR; }
+<YYINITIAL> "<=" { return CeylonTokenTypes.LESS_THAN_OR_EQUAL_TO_OPERATOR; }
+<YYINITIAL> "<" { return CeylonTokenTypes.LESS_THAN_OPERATOR; }
+<YYINITIAL> ">=" { return CeylonTokenTypes.GREATER_THAN_OR_EQUAL_TO_OPERATOR; }
+<YYINITIAL> ">" { return CeylonTokenTypes.GREATER_THAN_OPERATOR; }
 <YYINITIAL> ":=" { return CeylonTokenTypes.ASSIGN_OPERATOR; }
-<YYINITIAL> ".=" { return CeylonTokenTypes.APPLY_OPERATOR; }
 <YYINITIAL> "+=" { return CeylonTokenTypes.ADD_ASSIGN_OPERATOR; }
+<YYINITIAL> "++" { return CeylonTokenTypes.INCREMENT_OPERATOR; }
+<YYINITIAL> "+" { return CeylonTokenTypes.ADD_OPERATOR; }
 <YYINITIAL> "-=" { return CeylonTokenTypes.SUBTRACT_ASSIGN_OPERATOR; }
+<YYINITIAL> "--" { return CeylonTokenTypes.DECREMENT_OPERATOR; }
+<YYINITIAL> "->" { return CeylonTokenTypes.ENTRY_OPERATOR; }
+<YYINITIAL> "-" { return CeylonTokenTypes.SUBTRACT_OPERATOR; }
 <YYINITIAL> "/=" { return CeylonTokenTypes.DIVIDE_ASSIGN_OPERATOR; }
+<YYINITIAL> "/" { return CeylonTokenTypes.DIVIDE_OPERATOR; }
 <YYINITIAL> "*=" { return CeylonTokenTypes.MULTIPLY_ASSIGN_OPERATOR; }
+<YYINITIAL> "**" { return CeylonTokenTypes.POWER_OPERATOR; }
+<YYINITIAL> "*" { return CeylonTokenTypes.MULTIPLY_OPERATOR; }
 <YYINITIAL> "%=" { return CeylonTokenTypes.MODULO_ASSIGN_OPERATOR; }
-<YYINITIAL> "|=" { return CeylonTokenTypes.UNION_ASSIGN_OPERATOR; }
+<YYINITIAL> "%" { return CeylonTokenTypes.MODULO_OPERATOR; }
 <YYINITIAL> "&=" { return CeylonTokenTypes.INTERSECTION_ASSIGN_OPERATOR; }
+<YYINITIAL> "&" { return CeylonTokenTypes.INTERSECTION_OPERATOR; }
 <YYINITIAL> "^=" { return CeylonTokenTypes.XOR_ASSIGN_OPERATOR; }
+<YYINITIAL> "^" { return CeylonTokenTypes.XOR_OPERATOR; }
 <YYINITIAL> "~=" { return CeylonTokenTypes.COMPLEMENT_ASSIGN_OPERATOR; }
-<YYINITIAL> "||=" { return CeylonTokenTypes.OR_ASSIGN_OPERATOR; }
-<YYINITIAL> "&&=" { return CeylonTokenTypes.AND_ASSIGN_OPERATOR; }
+<YYINITIAL> "~" { return CeylonTokenTypes.COMPLEMENT_OPERATOR; }
 <YYINITIAL> "@" { return CeylonTokenTypes.AMPERSAND_OPERATOR; }
 
 <YYINITIAL> {ESCAPE_SEQUENCE} { return CeylonTokenTypes.ESCAPE_SEQUENCE; }

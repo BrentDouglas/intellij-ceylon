@@ -26,7 +26,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (root == ABBREVIATION) parseAbbreviation(builder);
         if (root == ABBREVIATED_TYPE) parseAbbreviatedType(builder);
         if (root == ABSTRACTED_TYPE) parseAbstractedType(builder);
-        if (root == ADAPTED_TYPES) parseAdaptedTypes(builder);
+        //if (root == ADAPTED_TYPES) parseAdaptedTypes(builder); PROPOSAL
         if (root == ANNOTATION) parseAnnotation(builder);
         if (root == ARGUMENTS) parseArguments(builder);
         if (root == ASSIGNMENT) parseAssignment(builder);
@@ -105,7 +105,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (root == MEMBER_NAME) parseMemberName(builder);
         if (root == MEMBER_REFERENCE) parseMemberReference(builder);
         if (root == META) parseMeta(builder);
-        if (root == META_TYPES) parseMetaTypes(builder);
+        //if (root == META_TYPES) parseMetaTypes(builder); PROPOSAL
         if (root == METHOD_ATTRIBUTE_ALIAS) parseMethodAttributeAlias(builder);
         if (root == METHOD_HEADER) parseMethodHeader(builder);
         if (root == METHOD) parseMethod(builder);
@@ -221,8 +221,10 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * PROPOSAL
      * AdaptedTypes: "adapts" Type ("&" Type)*
      */
+    /*
     public static boolean parseAdaptedTypes(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, ADAPTS_KEYWORD)) {
@@ -240,6 +242,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         marker.done(ADAPTED_TYPES);
         return true;
     }
+    */
 
     /*
      * Annotation: MemberName ( Arguments | Literal+ )?
@@ -690,12 +693,13 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                              PROPOSAL
      * ClassInheritance: CaseTypes? Metatypes? ExtendedType? SatisfiedTypes?
      */
     public static boolean parseClassInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseExtendedType(builder);
         parseSatisfiedTypes(builder);
         marker.done(CLASS_INHERITANCE);
@@ -1435,13 +1439,14 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                  PROPOSAL   PROPOSAL
      * InterfaceInheritance: CaseTypes? MetaTypes? AdaptedTypes? SatisfiedTypes?
      */
     public static boolean parseInterfaceInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
-        parseAdaptedTypes(builder);
+        //parseMetaTypes(builder);
+        //parseAdaptedTypes(builder);
         parseSatisfiedTypes(builder);
         marker.done(INTERFACE_INHERITANCE);
         return true;
@@ -1625,6 +1630,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     /*
      * Metatypes: "is" Type ("&" Type)*
      */
+    /*
     public static boolean parseMetaTypes(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, IS_KEYWORD)) {
@@ -1642,6 +1648,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         marker.done(META_TYPES);
         return true;
     }
+     */
 
     /*
      * Method: Annotation* MethodHeader (Block | Specifier? ";")
@@ -1682,6 +1689,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                                                                PROPOSAL
      * MethodHeader: (UnionType | "function" | "void") MemberName TypeParams? Params+ Metatypes? TypeConstraints?
      */
     public static boolean parseMethodHeader(final PsiBuilder builder) {
@@ -1704,7 +1712,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         } else {
             builder.error(CeylonBundle.message("expected.params"));
         }
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseTypeConstraints(builder);
         marker.done(METHOD_HEADER);
         return true;
@@ -1852,11 +1860,10 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (!parseSimpleParam(builder)
                 && !parseCallableParam(builder)
                 && !parseEntryParamPair(builder)) {
-            marker.rollbackTo();
-        }
-        if (parseMemberName(builder)) {
-            marker.rollbackTo();
-            return false;
+            if (!parseMemberName(builder)) {
+                marker.rollbackTo();
+                return false;
+            }
         }
         marker.done(PARAM);
         return true;
@@ -2363,7 +2370,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         }
         if (parseCases(builder)) {
         } else if (find(builder, LEFT_BRACE_OPERATOR)) {
-            if (parseCases(builder)) {
+            if (!parseCases(builder)) {
                 builder.error(CeylonBundle.message("expected.cases"));
             }
             require(builder, RIGHT_BRACE_OPERATOR, CeylonBundle.message("expected.rightbrace"));
@@ -2518,12 +2525,13 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     *                                       PROPOSAL
      * TypeConstraintInheritance: CaseTypes? Metatypes? SatisfiedTypes? AbstractedType?
      */
     public static boolean parseTypeConstraintInheritance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         parseCaseTypes(builder);
-        parseMetaTypes(builder);
+        //parseMetaTypes(builder);
         parseSatisfiedTypes(builder);
         parseAbstractedType(builder);
         marker.done(TYPE_CONSTRAINT_INHERITANCE);

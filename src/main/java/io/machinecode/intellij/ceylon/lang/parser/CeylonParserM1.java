@@ -2332,7 +2332,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         }
         if (parseCases(builder)) {
         } else if (find(builder, LEFT_BRACE_OPERATOR)) {
-            if (parseCases(builder)) {
+            if (!parseCases(builder)) {
                 builder.error(CeylonBundle.message("expected.cases"));
             }
             require(builder, RIGHT_BRACE_OPERATOR, CeylonBundle.message("expected.rightbrace"));
@@ -2649,11 +2649,22 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        while (find(builder, UNION_OPERATOR)) {
-            if (!parseIntersectionType(builder)) {
-                builder.error(CeylonBundle.message("expected.intersectiontype"));
+        boolean found;
+        do {
+            found = false;
+            final PsiBuilder.Marker next = builder.mark();
+            if (find(builder, UNION_OPERATOR)) {
+                if (parseIntersectionType(builder)) {
+                    next.drop();
+                    found = true;
+                } else {
+                    builder.error(CeylonBundle.message("expected.intersectiontype"));
+                    next.rollbackTo();
+                }
+            } else {
+                next.drop();
             }
-        }
+        } while (found);
         marker.done(UNION_TYPE);
         return true;
     }

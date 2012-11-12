@@ -26,7 +26,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
         if (root == ABBREVIATION) parseAbbreviation(builder);
         if (root == ABBREVIATED_TYPE) parseAbbreviatedType(builder);
         if (root == ABSTRACTED_TYPE) parseAbstractedType(builder);
-        //if (root == ADAPTED_TYPES) parseAdaptedTypes(builder); PROPOSED
+        //if (root == ADAPTED_TYPES) parseAdaptedTypes(builder); PROPOSAL
         if (root == ANNOTATION) parseAnnotation(builder);
         if (root == ARGUMENTS) parseArguments(builder);
         if (root == ASSIGNMENT) parseAssignment(builder);
@@ -104,7 +104,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
         if (root == MEMBER_NAME) parseMemberName(builder);
         if (root == MEMBER_REFERENCE) parseMemberReference(builder);
         if (root == META) parseMeta(builder);
-        //if (root == META_TYPES) parseMetaTypes(builder); PROPOSED
+        //if (root == META_TYPES) parseMetaTypes(builder); PROPOSAL
         if (root == METHOD_ATTRIBUTE_ALIAS) parseMethodAttributeAlias(builder);
         if (root == METHOD_HEADER) parseMethodHeader(builder);
         if (root == METHOD) parseMethod(builder);
@@ -119,7 +119,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
         //if (root == OPERATOR) parseOperator(builder);
         if (root == PACKAGE_NAME) parsePackageName(builder);
         if (root == PARAM) parseParam(builder);
-        //if (root == PARAMETER_TYPES) parseParameterTypes(builder);
+        if (root == PARAMETER_TYPES) parseParameterTypes(builder);
         if (root == PARAMS) parseParams(builder);
         if (root == PAR_EXPRESSION) parseParExpression(builder);
         if (root == POSITIONAL_ARGUMENTS) parsePositionalArguments(builder);
@@ -704,7 +704,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     *                              PROPOSED
+     *                              PROPOSAL
      * ClassInheritance: CaseTypes? Metatypes? ExtendedType? SatisfiedTypes?
      */
     public static boolean parseClassInheritance(final PsiBuilder builder) {
@@ -1460,7 +1460,8 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
         return true;
     }
 
-    /*                                  PROPOSED   PROPOSED
+    /*
+     *                                  PROPOSAL   PROPOSAL
      * InterfaceInheritance: CaseTypes? MetaTypes? AdaptedTypes? SatisfiedTypes?
      */
     public static boolean parseInterfaceInheritance(final PsiBuilder builder) {
@@ -1712,7 +1713,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
-     *                                                                                PROPOSED
+     *                                                                                PROPOSAL
      * MethodHeader: (UnionType | "function" | "void") MemberName TypeParams? Params+ Metatypes? TypeConstraints?
      */
     public static boolean parseMethodHeader(final PsiBuilder builder) {
@@ -2394,7 +2395,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
         }
         if (parseCases(builder)) {
         } else if (find(builder, LEFT_BRACE_OPERATOR)) {
-            if (parseCases(builder)) {
+            if (!parseCases(builder)) {
                 builder.error(CeylonBundle.message("expected.cases"));
             }
             require(builder, RIGHT_BRACE_OPERATOR, CeylonBundle.message("expected.rightbrace"));
