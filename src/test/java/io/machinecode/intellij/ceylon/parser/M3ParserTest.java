@@ -31,6 +31,7 @@ public class M3ParserTest extends CeylonTestCase {
         assertEmpty(failParseLines("abbreviation.lines.fail.ceylon", CeylonElementTypes.ABBREVIATION, CeylonElementTypes.ATTRIBUTE_HEADER));
     }
 
+    //AbbreviatedType: Type (Abbreviation | ParameterTypes)*
     @Test
     public void testAbbreviatedType() {
 

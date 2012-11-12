@@ -1,5 +1,9 @@
 package io.machinecode.intellij.ceylon.lang.psi;
 
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
+import com.intellij.lang.ASTNode;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.tree.IElementType;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonAbbreviatedTypeImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonAbbreviationImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonAbstractedTypeImpl;
@@ -41,7 +45,6 @@ import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonEntryParamPairImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonEntryTypeImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonEntryVariablePairImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonExistsOrIsNonemptyConditionImpl;
-import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonExpressionCaseImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonExpressionImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonExpressionStatementImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonExtendedTypeImpl;
@@ -73,7 +76,6 @@ import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonInterfaceImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonInterfaceInheritanceImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonIntersectionTypeImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonInvocationImpl;
-import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonIsCaseImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonIsConditionImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonIteratorVariableImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonLiteralImpl;
@@ -102,11 +104,9 @@ import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonPositionalArgumentImpl
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonPositionalArgumentsImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonPrimaryImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonReceiverImpl;
-import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonResourceDeclarationImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonResourceImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonReturnImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonSatisfiedTypesImpl;
-import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonSatisfiesCaseImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonSatisfiesConditionImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonSelfReferenceImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonSequenceImpl;
@@ -147,10 +147,6 @@ import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonValueReferenceImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonVariableImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonVarianceImpl;
 import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonWhileImpl;
-import com.intellij.extapi.psi.ASTWrapperPsiElement;
-import com.intellij.lang.ASTNode;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.tree.IElementType;
 
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.ABBREVIATED_TYPE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.ABBREVIATION;
@@ -194,7 +190,6 @@ import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.ENTRY_TYPE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.ENTRY_VARIABLE_PAIR;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.EXISTS_OR_IS_NONEMPTY_CONDITION;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.EXPRESSION;
-import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.EXPRESSION_CASE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.EXPRESSION_STATEMENT;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.EXTENDED_TYPE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.FAIL;
@@ -225,7 +220,6 @@ import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.INTERFACE_H
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.INTERFACE_INHERITANCE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.INTERSECTION_TYPE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.INVOCATION;
-import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.IS_CASE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.IS_CONDITION;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.ITERATOR_VARIABLE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.LITERAL;
@@ -255,10 +249,8 @@ import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.POSITIONAL_
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.PRIMARY;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.RECEIVER;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.RESOURCE;
-import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.RESOURCE_DECLARATION;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.RETURN;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.SATISFIED_TYPES;
-import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.SATISFIES_CASE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.SATISFIES_CONDITION;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.SELF_REFERENCE;
 import static io.machinecode.intellij.ceylon.lang.CeylonElementTypes.SEQUENCE;
@@ -448,12 +440,6 @@ public class CeylonPsiCreator {
         if (type == VARIABLE) return new CeylonVariableImpl(node);
         if (type == VARIANCE) return new CeylonVarianceImpl(node);
         if (type == WHILE) return new CeylonWhileImpl(node);
-
-        if (type == EXPRESSION_CASE) return new CeylonExpressionCaseImpl(node);
-        if (type == IS_CASE) return new CeylonIsCaseImpl(node);
-        if (type == SATISFIES_CASE) return new CeylonSatisfiesCaseImpl(node);
-
-        if (type == RESOURCE_DECLARATION) return new CeylonResourceDeclarationImpl(node);
 
         return new ASTWrapperPsiElement(node);
     }

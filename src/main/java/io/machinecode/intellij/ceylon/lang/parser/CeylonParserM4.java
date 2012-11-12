@@ -516,24 +516,36 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     public static boolean parseCase(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (parseExpression(builder)) {
-            while (find(builder, COMMA_OPERATOR) && parseExpression(builder)) {
-                //
+            boolean found = false;
+            while (find(builder, COMMA_OPERATOR)) {
+                found = true;
+                if (!parseExpression(builder)) {
+                    builder.error(CeylonBundle.message("expected.expression"));
+                }
             }
-        } else if (find(builder, IS_KEYWORD)) {
-            if (!parseUnionType(builder)) {
-                marker.rollbackTo();
-                return false;
+            if (!found) {
+                if (find(builder, IS_KEYWORD)) {
+                    found = true;
+                    if (!parseUnionType(builder)) {
+                        builder.error(CeylonBundle.message("expected.uniontype"));
+                    }
+                }
             }
-        } else if (find(builder, SATISFIES_KEYWORD)) {
-            if (!parseType(builder)) {
-                marker.rollbackTo();
-                return false;
+            if (!found) {
+                if (find(builder, SATISFIES_KEYWORD)) {
+                    found = true;
+                    if (!parseType(builder)) {
+                        builder.error(CeylonBundle.message("expected.type"));
+                    }
+                }
+            }
+            if (!found) {
+                builder.error(CeylonBundle.message("expected.expressionorisorsatisfies"));
             }
         } else {
             marker.rollbackTo();
             return false;
         }
-
         marker.done(CASE);
         return true;
     }
@@ -2744,7 +2756,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
     public static boolean parseVariance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, IN_KEYWORD)
-                || !find(builder, OUT_KEYWORD)) {
+                && !find(builder, OUT_KEYWORD)) {
             marker.rollbackTo();
             return false;
         }

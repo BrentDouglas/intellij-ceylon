@@ -279,6 +279,31 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * Assignment: ":=" | ".=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||="
+     */
+    public static boolean parseAssignment(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, ASSIGN_OPERATOR)
+                && ! find(builder, APPLY_OPERATOR)
+                && ! find(builder, ADD_ASSIGN_OPERATOR)
+                && ! find(builder, SUBTRACT_ASSIGN_OPERATOR)
+                && ! find(builder, MULTIPLY_ASSIGN_OPERATOR)
+                && ! find(builder, DIVIDE_ASSIGN_OPERATOR)
+                && ! find(builder, MODULO_ASSIGN_OPERATOR)
+                && ! find(builder, INTERSECTION_ASSIGN_OPERATOR)
+                && ! find(builder, UNION_ASSIGN_OPERATOR)
+                && ! find(builder, XOR_ASSIGN_OPERATOR)
+                && ! find(builder, COMPLEMENT_ASSIGN_OPERATOR)
+                && ! find(builder, AND_ASSIGN_OPERATOR)
+                && ! find(builder, OR_ASSIGN_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(ASSIGNMENT);
+        return true;
+    }
+
+    /*
      * Atom: Literal | StringTemplate | SelfReference | ParExpression
      */
     public static boolean parseAtom(final PsiBuilder builder) {
@@ -329,6 +354,23 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     }
 
     /*
+     * AttributeHeader: (UnionType | "value") MemberName
+     */
+    public static boolean parseAttributeHeader(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseUnionType(builder)
+                && ! find(builder, VALUE_KEYWORD)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parseMemberName(builder)) {
+            builder.error(CeylonBundle.message("expected.membername"));
+        }
+        marker.done(ATTRIBUTE_HEADER);
+        return true;
+    }
+
+    /*
      * AttributeMeta: Type "." MemberName
      */
     public static boolean parseAttributeMeta(final PsiBuilder builder) {
@@ -361,48 +403,6 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             builder.error(CeylonBundle.message("expected.block"));
         }
         marker.done(ATTRIBUTE_SETTER);
-        return true;
-    }
-
-    /*
-     * AttributeHeader: (UnionType | "value") MemberName
-     */
-    public static boolean parseAttributeHeader(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!parseUnionType(builder)
-                && ! find(builder, VALUE_KEYWORD)) {
-            marker.rollbackTo();
-            return false;
-        }
-        if (!parseMemberName(builder)) {
-            builder.error(CeylonBundle.message("expected.membername"));
-        }
-        marker.done(ATTRIBUTE_HEADER);
-        return true;
-    }
-
-    /*
-     * Assignment: ":=" | ".=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||="
-     */
-    public static boolean parseAssignment(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, ASSIGN_OPERATOR)
-                && ! find(builder, APPLY_OPERATOR)
-                && ! find(builder, ADD_ASSIGN_OPERATOR)
-                && ! find(builder, SUBTRACT_ASSIGN_OPERATOR)
-                && ! find(builder, MULTIPLY_ASSIGN_OPERATOR)
-                && ! find(builder, DIVIDE_ASSIGN_OPERATOR)
-                && ! find(builder, MODULO_ASSIGN_OPERATOR)
-                && ! find(builder, INTERSECTION_ASSIGN_OPERATOR)
-                && ! find(builder, UNION_ASSIGN_OPERATOR)
-                && ! find(builder, XOR_ASSIGN_OPERATOR)
-                && ! find(builder, COMPLEMENT_ASSIGN_OPERATOR)
-                && ! find(builder, AND_ASSIGN_OPERATOR)
-                && ! find(builder, OR_ASSIGN_OPERATOR)) {
-            marker.rollbackTo();
-            return false;
-        }
-        marker.done(ASSIGNMENT);
         return true;
     }
 
@@ -514,7 +514,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
      */
     public static boolean parseCase(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (parseExpressionCase(builder)) {
+        if (parseExpression(builder)) {
             boolean found = false;
             while (find(builder, COMMA_OPERATOR)) {
                 found = true;
@@ -961,24 +961,6 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             return false;
         }
         marker.done(EXPRESSION);
-        return true;
-    }
-
-    /*
-     * ExpressionCase: Expression ("," Expression)*
-     */
-    public static boolean parseExpressionCase(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!parseExpression(builder)) {
-            marker.rollbackTo();
-            return false;
-        }
-        while (find(builder, COMMA_OPERATOR)) {
-            if (!parseExpression(builder)) {
-                builder.error(CeylonBundle.message("expected.expression"));
-            }
-        }
-        marker.done(EXPRESSION_CASE);
         return true;
     }
 
@@ -2719,7 +2701,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     public static boolean parseVariance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, IN_KEYWORD)
-                || !find(builder, OUT_KEYWORD)) {
+                && !find(builder, OUT_KEYWORD)) {
             marker.rollbackTo();
             return false;
         }

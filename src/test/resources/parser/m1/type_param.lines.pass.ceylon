@@ -1,0 +1,12 @@
+Adfkljgh9879847564
+A_fdghkourty456456
+UPPER_CASE_987534
+String
+in Adfkljgh9879847564
+in A_fdghkourty456456
+in UPPER_CASE_987534
+in String
+out Adfkljgh9879847564
+out A_fdghkourty456456
+out UPPER_CASE_987534
+out String

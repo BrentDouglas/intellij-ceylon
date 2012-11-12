@@ -27,10 +27,11 @@ public class M4ParserTest extends CeylonTestCase {
     //Abbreviation: "?" | "[]"
     @Test
     public void testAbbreviation() {
-        parseLines("abbreviation.lines.pass.ceylon", CeylonElementTypes.ABBREVIATION, CeylonElementTypes.ATTRIBUTE_HEADER);
-        assertEmpty(failParseLines("abbreviation.lines.fail.ceylon", CeylonElementTypes.ABBREVIATION, CeylonElementTypes.ATTRIBUTE_HEADER));
+        parseLines("abbreviation.lines.pass.ceylon", CeylonElementTypes.ABBREVIATION);
+        assertEmpty(failParseLines("abbreviation.lines.fail.ceylon", CeylonElementTypes.ABBREVIATION));
     }
 
+    //AbbreviatedType: Type (Abbreviation | ParameterTypes)*
     @Test
     public void testAbbreviatedType() {
 

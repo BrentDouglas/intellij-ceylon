@@ -514,7 +514,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
      */
     public static boolean parseCase(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (parseExpressionCase(builder)) {
+        if (parseExpression(builder)) {
             boolean found = false;
             while (find(builder, COMMA_OPERATOR)) {
                 found = true;
@@ -961,24 +961,6 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
             return false;
         }
         marker.done(EXPRESSION);
-        return true;
-    }
-
-    /*
-     * ExpressionCase: Expression ("," Expression)*
-     */
-    public static boolean parseExpressionCase(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!parseExpression(builder)) {
-            marker.rollbackTo();
-            return false;
-        }
-        while (find(builder, COMMA_OPERATOR)) {
-            if (!parseExpression(builder)) {
-                builder.error(CeylonBundle.message("expected.expression"));
-            }
-        }
-        marker.done(EXPRESSION_CASE);
         return true;
     }
 
@@ -2771,7 +2753,7 @@ public class CeylonParserM3 extends CeylonParser implements PsiParser, CeylonTok
     public static boolean parseVariance(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, IN_KEYWORD)
-                || !find(builder, OUT_KEYWORD)) {
+                && !find(builder, OUT_KEYWORD)) {
             marker.rollbackTo();
             return false;
         }

@@ -148,10 +148,4 @@ public interface CeylonElementTypes {
     CeylonElementType VARIABLE = new CeylonElementType("");
     CeylonElementType VARIANCE = new CeylonElementType("");
     CeylonElementType WHILE = new CeylonElementType("");
-
-    CeylonElementType EXPRESSION_CASE = new CeylonElementType("");                // < 0.4
-    CeylonElementType IS_CASE = new CeylonElementType("");                        // < 0.4
-    CeylonElementType SATISFIES_CASE = new CeylonElementType("");                 // < 0.4
-
-    CeylonElementType RESOURCE_DECLARATION = new CeylonElementType("");           // < 0.4
 }

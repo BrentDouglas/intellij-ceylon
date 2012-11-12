@@ -196,6 +196,49 @@ public abstract class CeylonTestCase extends PsiTestCase {
 
         return failed;
     }
+
+
+
+
+
+    protected PsiElement parseFile(final String fileName, final CeylonElementType type) {
+        return parseFile(fileName, type, type);
+    }
+
+    protected PsiElement parseLine(final String line, final CeylonElementType type) {
+        return parseLine(line, type, type);
+    }
+
+    protected Set<PsiElement> parseLines(final String filename, final CeylonElementType type) {
+        return parseLines(filename, type, type);
+    }
+
+    protected Set<PsiElement> parseFileSections(final String filename, final CeylonElementType type) {
+        return parseFileSections(filename, type, type);
+    }
+
+    protected boolean failParseFile(final String filename, final CeylonElementType type) {
+        return failParseFile(filename, type, type);
+    }
+
+    protected boolean failParseLine(final String filename, final CeylonElementType type) {
+        return failParseLine(filename, type, type);
+    }
+
+    protected Set<String> failParseLines(final String filename, final CeylonElementType type) {
+        return failParseLines(filename, type, type);
+    }
+
+    protected Set<String> failParseFileSections(final String filename, final CeylonElementType type) {
+        return failParseFileSections(filename, type, type);
+    }
+
+
+
+
+
+
+
     protected void assertEmpty(final Set<String> failed) {
         if (!failed.isEmpty()) {
             Assert.fail(getFailureMessage(failed));
