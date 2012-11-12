@@ -27,7 +27,7 @@ public class M4ParserTest extends CeylonTestCase {
     //Abbreviation: "?" | "[]"
     @Test
     public void testAbbreviation() {
-        parseLines("abbreviation.lines.pass.ceylon", CeylonElementTypes.ABBREVIATION);
+        assertEmpty(parseLines("abbreviation.lines.pass.ceylon", CeylonElementTypes.ABBREVIATION));
         assertEmpty(failParseLines("abbreviation.lines.fail.ceylon", CeylonElementTypes.ABBREVIATION));
     }
 
@@ -719,8 +719,8 @@ public class M4ParserTest extends CeylonTestCase {
 
     @Test
     public void testUnionType() {
-        parseLines("uniontype.lines.pass.ceylon", CeylonElementTypes.UNION_TYPE, CeylonElementTypes.ATTRIBUTE_HEADER);
-        assertEmpty(failParseLines("uniontype.lines.fail.ceylon", CeylonElementTypes.UNION_TYPE, CeylonElementTypes.ATTRIBUTE_HEADER));
+        assertEmpty(parseLines("union_type.lines.pass.ceylon", CeylonElementTypes.UNION_TYPE));
+        assertEmpty(failParseLines("union_type.lines.fail.ceylon", CeylonElementTypes.UNION_TYPE));
     }
 
     @Test

@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
  */
-public class M1ParserTest extends CeylonTestCase {
+public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
 
     @Override
     public String getResourceDirectory() {
@@ -27,8 +27,8 @@ public class M1ParserTest extends CeylonTestCase {
     //Abbreviation: "?" | "[]"
     @Test
     public void testAbbreviation() {
-        parseLines("abbreviation.lines.pass.ceylon", CeylonElementTypes.ABBREVIATION);
-        assertEmpty(failParseLines("abbreviation.lines.fail.ceylon", CeylonElementTypes.ABBREVIATION));
+        assertEmpty(parseLines("abbreviation.lines.pass.ceylon", ABBREVIATION));
+        assertEmpty(failParseLines("abbreviation.lines.fail.ceylon", ABBREVIATION));
     }
 
     //AbbreviatedType: Type Abbreviation*
@@ -112,7 +112,7 @@ public class M1ParserTest extends CeylonTestCase {
     //Break: "break"
     @Test
     public void testBreak() {
-        parseLines("break.lines.pass.ceylon", CeylonElementTypes.BREAK);
+        assertEmpty(parseLines("break.lines.pass.ceylon", BREAK));
     }
 
     //CallableParam: (UnionType | "void") MemberName Params+
@@ -208,7 +208,7 @@ public class M1ParserTest extends CeylonTestCase {
     //Continue: "continue"
     @Test
     public void testContinue() {
-        parseLines("continue.lines.pass.ceylon", CeylonElementTypes.CONTINUE);
+        assertEmpty(parseLines("continue.lines.pass.ceylon", CONTINUE));
     }
 
     //ControlStructure: IfElse | SwitchCaseElse | While | ForFail | TryCatchFinally
@@ -400,8 +400,8 @@ public class M1ParserTest extends CeylonTestCase {
     //ImportWildcard: "..."
     @Test
     public void testImportWildcard() {
-        parseLines("import_wildcard.lines.pass.ceylon", CeylonElementTypes.IMPORT_WILDCARD);
-        assertEmpty(failParseLines("import_wildcard.lines.fail.ceylon", CeylonElementTypes.IMPORT_WILDCARD));
+        assertEmpty(parseLines("import_wildcard.lines.pass.ceylon", IMPORT_WILDCARD));
+        assertEmpty(failParseLines("import_wildcard.lines.fail.ceylon", IMPORT_WILDCARD));
     }
 
     @Test
@@ -490,8 +490,8 @@ public class M1ParserTest extends CeylonTestCase {
     //MemberName: LIdentifier
     @Test
     public void testMemberName() {
-        parseLines("member_name.lines.pass.ceylon", CeylonElementTypes.MEMBER_NAME);
-        assertEmpty(failParseLines("member_name.lines.fail.ceylon", CeylonElementTypes.MEMBER_NAME));
+        assertEmpty(parseLines("member_name.lines.pass.ceylon", MEMBER_NAME));
+        assertEmpty(failParseLines("member_name.lines.fail.ceylon", MEMBER_NAME));
     }
 
     //MemberReference: CallableReference | ValueReference
@@ -640,7 +640,7 @@ public class M1ParserTest extends CeylonTestCase {
     //SelfReference: "this" | "super" | "outer"
     @Test
     public void testSelfReference() {
-        parseLines("self_reference.lines.pass.ceylon", CeylonElementTypes.SELF_REFERENCE);
+        assertEmpty(parseLines("self_reference.lines.pass.ceylon", SELF_REFERENCE));
     }
 
     //Sequence: Expression ("," Expression)* | Expression "..."
@@ -760,7 +760,8 @@ public class M1ParserTest extends CeylonTestCase {
     //TypeAlias: TypeName "="
     @Test
     public void testTypeAlias() {
-
+        assertEmpty(parseLines("type_alias.lines.pass.ceylon", TYPE_ALIAS));
+        assertEmpty(failParseLines("type_alias.lines.fail.ceylon", TYPE_ALIAS));
     }
 
     //TypeArguments: "<" (UnionType ",")* (UnionType | SequencedType) ">"
@@ -808,8 +809,8 @@ public class M1ParserTest extends CeylonTestCase {
     //TypeName: UIdentifier
     @Test
     public void testTypeName() {
-        parseLines("type_name.lines.pass.ceylon", CeylonElementTypes.TYPE_NAME);
-        assertEmpty(failParseLines("type_name.lines.fail.ceylon", CeylonElementTypes.TYPE_NAME));
+        assertEmpty(parseLines("type_name.lines.pass.ceylon", TYPE_NAME));
+        assertEmpty(failParseLines("type_name.lines.fail.ceylon", TYPE_NAME));
     }
 
     //TypeNameWithArguments: TypeName TypeArguments?
@@ -821,8 +822,8 @@ public class M1ParserTest extends CeylonTestCase {
     //TypeParam: Variance? TypeName
     @Test
     public void testTypeParam() {
-        parseLines("type_param.lines.pass.ceylon", CeylonElementTypes.TYPE_PARAM);
-        assertEmpty(failParseLines("type_param.lines.fail.ceylon", CeylonElementTypes.TYPE_PARAM));
+        assertEmpty(parseLines("type_param.lines.pass.ceylon", TYPE_PARAM));
+        assertEmpty(failParseLines("type_param.lines.fail.ceylon", TYPE_PARAM));
     }
 
     //TypeParams: "<" (TypeParam ",")* (TypeParam | SequencedTypeParam) ">"
@@ -840,8 +841,8 @@ public class M1ParserTest extends CeylonTestCase {
     //UnionType: IntersectionType ("|" IntersectionType)*
     @Test
     public void testUnionType() {
-        parseLines("uniontype.lines.pass.ceylon", CeylonElementTypes.UNION_TYPE);
-        assertEmpty(failParseLines("uniontype.lines.fail.ceylon", CeylonElementTypes.UNION_TYPE));
+        assertEmpty(parseLines("union_type.lines.pass.ceylon", UNION_TYPE));
+        assertEmpty(failParseLines("union_type.lines.fail.ceylon", UNION_TYPE));
     }
 
     //ValueMeta: MemberName TypeArguments?
@@ -865,7 +866,7 @@ public class M1ParserTest extends CeylonTestCase {
     //Variance: "out" | "in"
     @Test
     public void testVariance() {
-        parseLines("variance.lines.pass.ceylon", CeylonElementTypes.VARIANCE);
+        assertEmpty(parseLines("variance.lines.pass.ceylon", VARIANCE));
     }
 
     //While: LoopCondition Block

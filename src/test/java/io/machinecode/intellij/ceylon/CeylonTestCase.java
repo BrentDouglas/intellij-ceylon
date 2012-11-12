@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,97 +61,142 @@ public abstract class CeylonTestCase extends PsiTestCase {
         });
     }
 
-    protected PsiElement parseFile(final String fileName, final CeylonElementType type, final CeylonElementType parent) {
+    /*
+     * Parse file and return all lines that do not parse correctly
+     */
+
+    protected Set<String> parseFile(final String fileName, final CeylonElementType type) {
         final String text = readFile(getResourceDirectory() + '/' + fileName);
-        return ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+        final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+        final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                 text,
                 CeylonLanguage.CEYLON_LANGUAGE,
                 type,
-                CeylonPsiCreator.createElement(new CompositeElement(parent)));
+                parent);
+        if (result == null || parent == result) {
+            return Collections.singleton(text);
+        }
+        return Collections.emptySet();
     }
 
-    protected PsiElement parseLine(final String line, final CeylonElementType type, final CeylonElementType parent) {
-        return ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+    protected Set<String> parseLine(final String line, final CeylonElementType type) {
+        final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+        final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                 line,
                 CeylonLanguage.CEYLON_LANGUAGE,
                 type,
-                CeylonPsiCreator.createElement(new CompositeElement(parent)));
+                parent);
+        if (result == null || parent == result) {
+            return Collections.singleton(line);
+        }
+        return Collections.emptySet();
     }
 
-    protected Set<PsiElement> parseLines(final String filename, final CeylonElementType type, final CeylonElementType parent) {
-        final Set<PsiElement> elements = new HashSet<PsiElement>();
+    protected Set<String> parseLines(final String filename, final CeylonElementType type) {
+        final Set<String> failed = new HashSet<String>();
         for (final String line : readFileLines(getResourceDirectory() + '/' + filename)) {
-            elements.add(((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+            final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+            final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                     line,
                     CeylonLanguage.CEYLON_LANGUAGE,
                     type,
-                    CeylonPsiCreator.createElement(new CompositeElement(parent))));
+                    parent);
+            if (result == null || parent == result) {
+                failed.add(line);
+            }
         }
-        return elements;
+        return failed;
     }
 
-    protected Set<PsiElement> parseFileSections(final String filename, final CeylonElementType type, final CeylonElementType parent) {
+    protected Set<String> parseFileSections(final String filename, final CeylonElementType type) {
+        final Set<String> failed = new HashSet<String>();
         final Set<PsiElement> elements = new HashSet<PsiElement>();
         final Set<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
+        String text;
         StringBuilder builder = new StringBuilder();
         for (final String line : lines) {
             if ("---".equals(line)) {
-                elements.add(((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
-                        builder.toString(),
+                text = builder.toString();
+                final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+                final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+                        text,
                         CeylonLanguage.CEYLON_LANGUAGE,
                         type,
-                        CeylonPsiCreator.createElement(new CompositeElement(parent))));
+                        parent);
+                if (result == null || parent == result) {
+                    failed.add(text);
+                }
                 builder = new StringBuilder();
             } else {
                 builder.append(line);
             }
         }
-        elements.add(((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
-                builder.toString(),
+        text = builder.toString();
+        final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+        final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+                text,
                 CeylonLanguage.CEYLON_LANGUAGE,
                 type,
-                CeylonPsiCreator.createElement(new CompositeElement(parent))));
-        return elements;
+                parent);
+        if (result == null || parent == result) {
+            failed.add(text);
+        }
+        return failed;
     }
 
-    protected boolean failParseFile(final String fileName, final CeylonElementType type, final CeylonElementType parent) {
+    /*
+     * Parse file and return all lines that parse correctly
+     */
+
+    protected Set<String> failParseFile(final String fileName, final CeylonElementType type) {
         final String text = readFile(getResourceDirectory() + '/' + fileName);
         try {
-            ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+            final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+            final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                     text,
                     CeylonLanguage.CEYLON_LANGUAGE,
                     type,
-                    CeylonPsiCreator.createElement(new CompositeElement(parent)));
+                    parent);
+            if (result != null && parent != result) {
+                return Collections.singleton(text);
+            }
         } catch (final Throwable throwable) {
-            return true;
+            return Collections.emptySet();
         }
-        return false;
+        return Collections.singleton(text);
     }
 
-    protected boolean failParseLine(final String line, final CeylonElementType type, final CeylonElementType parent) {
+    protected Set<String> failParseLine(final String line, final CeylonElementType type) {
         try {
-            ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+            final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+            final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                     line,
                     CeylonLanguage.CEYLON_LANGUAGE,
                     type,
-                    CeylonPsiCreator.createElement(new CompositeElement(parent)));
+                    parent);
+            if (result != null && parent != result) {
+                return Collections.singleton(line);
+            }
         } catch (final Throwable throwable) {
-            return true;
+            return Collections.emptySet();
         }
-        return false;
+        return Collections.singleton(line);
     }
 
-    protected Set<String> failParseLines(final String filename, final CeylonElementType type, final CeylonElementType parent) {
+    protected Set<String> failParseLines(final String filename, final CeylonElementType type) {
         final Set<String> failed = new HashSet<String>();
         final Set<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
         for (final String line : lines) {
             try {
-                ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+                final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+                final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                         line,
                         CeylonLanguage.CEYLON_LANGUAGE,
                         type,
-                        CeylonPsiCreator.createElement(new CompositeElement(parent)));
-                failed.add(line);
+                        parent);
+                if (result != null && parent != result) {
+                    failed.add(line);
+                }
             } catch (final Throwable throwable) {
                 //
             }
@@ -158,7 +204,7 @@ public abstract class CeylonTestCase extends PsiTestCase {
         return failed;
     }
 
-    protected Set<String> failParseFileSections(final String filename, final CeylonElementType type, final CeylonElementType parent) {
+    protected Set<String> failParseFileSections(final String filename, final CeylonElementType type) {
         final Set<String> failed = new HashSet<String>();
         final Set<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
 
@@ -167,12 +213,15 @@ public abstract class CeylonTestCase extends PsiTestCase {
             if ("---".equals(line)) {
                 final String section = builder.toString();
                 try {
-                    ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+                    final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+                    final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                             section,
                             CeylonLanguage.CEYLON_LANGUAGE,
                             type,
-                            CeylonPsiCreator.createElement(new CompositeElement(parent)));
-                    failed.add(section);
+                            parent);
+                    if (result != null && parent != result) {
+                        failed.add(section);
+                    }
                 } catch (final Throwable throwable) {
                     //
                 }
@@ -184,60 +233,21 @@ public abstract class CeylonTestCase extends PsiTestCase {
 
         final String section = builder.toString();
         try {
-            ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
+            final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
+            final PsiElement result = ((PsiFileFactoryImpl)PsiFileFactory.getInstance(myProject)).createElementFromText(
                     section,
                     CeylonLanguage.CEYLON_LANGUAGE,
                     type,
-                    CeylonPsiCreator.createElement(new CompositeElement(parent)));
-            failed.add(section);
+                    parent);
+            if (result != null && parent != result) {
+                failed.add(section);
+            }
         } catch (final Throwable throwable) {
             //
         }
 
         return failed;
     }
-
-
-
-
-
-    protected PsiElement parseFile(final String fileName, final CeylonElementType type) {
-        return parseFile(fileName, type, type);
-    }
-
-    protected PsiElement parseLine(final String line, final CeylonElementType type) {
-        return parseLine(line, type, type);
-    }
-
-    protected Set<PsiElement> parseLines(final String filename, final CeylonElementType type) {
-        return parseLines(filename, type, type);
-    }
-
-    protected Set<PsiElement> parseFileSections(final String filename, final CeylonElementType type) {
-        return parseFileSections(filename, type, type);
-    }
-
-    protected boolean failParseFile(final String filename, final CeylonElementType type) {
-        return failParseFile(filename, type, type);
-    }
-
-    protected boolean failParseLine(final String filename, final CeylonElementType type) {
-        return failParseLine(filename, type, type);
-    }
-
-    protected Set<String> failParseLines(final String filename, final CeylonElementType type) {
-        return failParseLines(filename, type, type);
-    }
-
-    protected Set<String> failParseFileSections(final String filename, final CeylonElementType type) {
-        return failParseFileSections(filename, type, type);
-    }
-
-
-
-
-
-
 
     protected void assertEmpty(final Set<String> failed) {
         if (!failed.isEmpty()) {

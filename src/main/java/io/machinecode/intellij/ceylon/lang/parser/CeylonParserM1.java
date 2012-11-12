@@ -2423,7 +2423,10 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        require(builder, SPECIFY_OPERATOR, CeylonBundle.message("expected.specify"));
+        if (!require(builder, SPECIFY_OPERATOR, CeylonBundle.message("expected.specify"))) {
+            marker.rollbackTo();
+            return false;
+        }
         marker.done(TYPE_ALIAS);
         return true;
     }
