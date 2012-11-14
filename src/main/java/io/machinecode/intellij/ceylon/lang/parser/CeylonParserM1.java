@@ -1,18 +1,15 @@
 package io.machinecode.intellij.ceylon.lang.parser;
 
-import io.machinecode.intellij.ceylon.CeylonBundle;
-import io.machinecode.intellij.ceylon.lang.CeylonElementTypes;
-import io.machinecode.intellij.ceylon.lang.lexer.CeylonTokenTypes;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.PsiBuilder;
-import com.intellij.lang.PsiParser;
 import com.intellij.psi.tree.IElementType;
+import io.machinecode.intellij.ceylon.CeylonBundle;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
  */
-public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTokenTypes, CeylonElementTypes {
+public class CeylonParserM1 extends CeylonParser {
 
     public static final CeylonParserM1 INSTANCE = new CeylonParserM1();
 
@@ -87,7 +84,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         if (root == IMPORT_METHOD_ATTRIBUTE_ELEMENT) parseImportMethodAttributeElement(builder);
         if (root == IMPORT_TYPE_ELEMENT) parseImportTypeElement(builder);
         if (root == IMPORT_WILDCARD) parseImportWildcard(builder);
-        if (root == INCREMENT_OR_DECREMENT) OperatorParser.parseIncrementOrDecrement(builder);
+        if (root == INCREMENT_OR_DECREMENT) parseIncrementOrDecrement(builder);
         if (root == INITIALIZER) parseInitializer(builder);
         if (root == INITIALIZER_REFERENCE) parseInitializerReference(builder);
         if (root == INTERFACE_BODY) parseInterfaceBody(builder);
@@ -115,7 +112,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         if (root == OBJECT_HEADER) parseObjectHeader(builder);
         if (root == OBJECT_INHERITANCE) parseObjectInheritance(builder);
         if (root == OBJECT) parseObject(builder);
-        if (root == OPERATOR_EXPRESSION) OperatorParser.parseOperatorExpression(builder);
+        if (root == OPERATOR_EXPRESSION) parseOperatorExpression(builder);
         //if (root == OPERATOR) parseOperator(builder);
         if (root == PACKAGE_NAME) parsePackageName(builder);
         if (root == PARAM) parseParam(builder);
@@ -168,6 +165,31 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
         if (root == VARIABLE) parseVariable(builder);
         if (root == VARIANCE) parseVariance(builder);
         if (root == WHILE) parseWhile(builder);
+
+        if (root == OPERATOR_EXPRESSION) parseOperatorExpression(builder);
+        if (root == INCREMENT_OR_DECREMENT) parseIncrementOrDecrement(builder);
+        if (root == ASSIGNMENT) parseAssignment(builder);
+        if (root == COMPOUND_ASSIGNMENT) parseCompountAssignment(builder);
+        if (root == FORMAT) parseFormat(builder);
+        if (root == EQUALITIES) parseEqualities(builder);
+        if (root == COMPARISON) parseComparison(builder);
+        if (root == CONTAINMENT) parseContainment(builder);
+        if (root == ASSIGNABILITY)  parseAssignability(builder);
+        if (root == INHERITANCE) parseInheritance(builder);
+        if (root == NOT) parseNot(builder);
+        if (root == LOGICAL_CONDITION) parseLogicalCondition(builder);
+        if (root == EXISTANCE) parseExistance(builder);
+        if (root == DEFAULT) parseDefault(builder);
+        if (root == NULLSAFE_INVOCATION) parseNullsafeInvocation(builder);
+        if (root == KEYED_ITEM_ACCESS) parseKeyedItemAccess(builder);
+        if (root == SPANS) parseSpans(builder);
+        if (root == SPREAD_INVOCATION) parseSpreadInvocation(builder);
+        if (root == RANGE_OR_ENTRY_CONSTRUCTION) parseRangeOrEntryConstruction(builder);
+        if (root == CONDITIONAL) parseConditional(builder);
+        if (root == INVERSION_OPERATION) parseInversionOperation(builder);
+        if (root == NUMERICAL_OPERATION) parseNumericalOperation(builder);
+        if (root == COMPLEMENT) parseComplement(builder);
+        if (root == SLOTWISE_OPERATOR) parseSlotwiseOperator(builder);
 
         marker.done(root);
         return builder.getTreeBuilt();
@@ -275,31 +297,6 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             return false;
         }
         marker.done(ARGUMENTS);
-        return true;
-    }
-
-    /*
-     * Assignment: ":=" | ".=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||="
-     */
-    public static boolean parseAssignment(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, ASSIGN_OPERATOR)
-                && ! find(builder, APPLY_OPERATOR)
-                && ! find(builder, ADD_ASSIGN_OPERATOR)
-                && ! find(builder, SUBTRACT_ASSIGN_OPERATOR)
-                && ! find(builder, MULTIPLY_ASSIGN_OPERATOR)
-                && ! find(builder, DIVIDE_ASSIGN_OPERATOR)
-                && ! find(builder, MODULO_ASSIGN_OPERATOR)
-                && ! find(builder, INTERSECTION_ASSIGN_OPERATOR)
-                && ! find(builder, UNION_ASSIGN_OPERATOR)
-                && ! find(builder, XOR_ASSIGN_OPERATOR)
-                && ! find(builder, COMPLEMENT_ASSIGN_OPERATOR)
-                && ! find(builder, AND_ASSIGN_OPERATOR)
-                && ! find(builder, OR_ASSIGN_OPERATOR)) {
-            marker.rollbackTo();
-            return false;
-        }
-        marker.done(ASSIGNMENT);
         return true;
     }
 
@@ -956,7 +953,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     public static boolean parseExpression(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!parsePrimary(builder)
-                && !OperatorParser.parseOperatorExpression(builder)) {
+                && !parseOperatorExpression(builder)) {
             marker.rollbackTo();
             return false;
         }
@@ -970,7 +967,7 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
     public static boolean parseExpressionStatement(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!parseAssignment(builder)
-                && !OperatorParser.parseIncrementOrDecrement(builder)
+                && !parseIncrementOrDecrement(builder)
                 && !parseInvocation(builder)) {
             marker.rollbackTo();
             return false;
@@ -1573,7 +1570,8 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
      */
     public static boolean parseMemberName(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (!find(builder, LOWERCASE_IDENTIFIER)) {
+        if (!find(builder, LOWERCASE_IDENTIFIER)
+                && !find(builder, PACKAGE_IDENTIFIER)) { //This is a valid lowercase identifier
             marker.rollbackTo();
             return false;
         }
@@ -2725,6 +2723,581 @@ public class CeylonParserM1 extends CeylonParser implements PsiParser, CeylonTok
             builder.error(CeylonBundle.message("expected.block"));
         }
         marker.done(WHILE);
+        return true;
+    }
+
+
+
+
+    //
+    // Operator expression
+    //
+
+
+
+
+    /*
+     * OperatorExpression: Invocation | Assignment | CompoundAssignment | Format | Equalities | Comparison |
+     *                    Containment | Assignability | Inheritance | Not | LogicalCondition | Existance | Default |
+     *                    NullsafeInvocation | KeyedItemAccess | Spans | SpreadInvocation | RangeOrEntryConstruction |
+     *                    Conditional | IncrementOrDecrement | NumericalOperation | NumericalAssignment |
+     *                    SlotwiseOperator | SlotwiseAssignment | InversionOperation | Complement
+     */
+    public static boolean parseOperatorExpression(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseInvocation(builder)
+                && !parseAssignment(builder)
+                && !parseCompountAssignment(builder)
+                && !parseFormat(builder)
+                && !parseEqualities(builder)
+                && !parseComparison(builder)
+                && !parseContainment(builder)
+                && !parseAssignability(builder)
+                && !parseInheritance(builder)
+                && !parseNot(builder)
+                && !parseLogicalCondition(builder)
+                && !parseExistance(builder)
+                && !parseDefault(builder)
+                && !parseNullsafeInvocation(builder)
+                && !parseKeyedItemAccess(builder)
+                && !parseSpans(builder)
+                && !parseSpreadInvocation(builder)
+                && !parseRangeOrEntryConstruction(builder)
+                && !parseConditional(builder)
+                && !parseComplement(builder)
+                && !parseNumericalOperation(builder)
+                && !parseSlotwiseOperator(builder)
+                && !parseInversionOperation(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(OPERATOR_EXPRESSION);
+        return true;
+    }
+
+    /*
+     * IncrementOrDecrement: MemberReference ( "++" | "--" ) | ( "++" | "--" ) MemberReference
+     */
+    public static boolean parseIncrementOrDecrement(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (parseMemberReference(builder)) {
+            if (!find(builder, INCREMENT_OPERATOR)
+                    && !find(builder, DECREMENT_OPERATOR)) {
+                builder.error(CeylonBundle.message("expected.incrementordecrement"));
+                marker.rollbackTo();
+                return false;
+            }
+        }
+        if (!find(builder, INCREMENT_OPERATOR)
+                && !find(builder, DECREMENT_OPERATOR)) {
+            if (parseMemberReference(builder)) {
+                builder.error(CeylonBundle.message("expected.memberreference"));
+                marker.rollbackTo();
+                return false;
+            }
+        }
+        marker.done(INCREMENT_OR_DECREMENT);
+        return true;
+    }
+
+    /*
+     * Assignment: MemberReference ( ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||=" ) Primary
+     */
+    public static boolean parseAssignment(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseMemberReference(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, ASSIGN_OPERATOR)
+                && !find(builder, ADD_ASSIGN_OPERATOR)
+                && !find(builder, SUBTRACT_ASSIGN_OPERATOR)
+                && !find(builder, DIVIDE_ASSIGN_OPERATOR)
+                && !find(builder, MULTIPLY_ASSIGN_OPERATOR)
+                && !find(builder, MODULO_ASSIGN_OPERATOR)
+                && !find(builder, UNION_ASSIGN_OPERATOR)
+                && !find(builder, INTERSECTION_ASSIGN_OPERATOR)
+                && !find(builder, XOR_ASSIGN_OPERATOR)
+                && !find(builder, COMPLEMENT_ASSIGN_OPERATOR)
+                && !find(builder, OR_ASSIGN_OPERATOR)
+                && !find(builder, AND_ASSIGN_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+        }
+        marker.done(ASSIGNMENT);
+        return true;
+    }
+
+    /*
+     * Equalities: Primary ".=" MemberReference Arguments?
+     */
+    public static boolean parseCompountAssignment(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, APPLY_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parseMemberReference(builder)) {
+            builder.error(CeylonBundle.message("expected.memberreference"));
+            marker.done(COMPOUND_ASSIGNMENT);
+            return true;
+        }
+        parseArguments(builder);
+        marker.done(COMPOUND_ASSIGNMENT);
+        return true;
+    }
+
+    /*
+     * Format: "$" Primary
+     */
+    public static boolean parseFormat(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, FORMAT_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.membername"));
+        }
+        marker.done(FORMAT);
+        return true;
+    }
+
+    /*
+     * Equalities: Primary ( "===" | "==" | "!=" ) Primary
+     */
+    public static boolean parseEqualities(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, IDENTICAL_OPERATOR)
+                && !find(builder, EQUAL_OPERATOR)
+                && !find(builder, NOT_EQUAL_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(EQUALITIES);
+        return true;
+    }
+
+    /*
+     * Comparison: Primary ( "<" | "<=" | "<=>" | "=>" | ">" ) Primary
+     */
+    public static boolean parseComparison(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, LESS_THAN_OPERATOR)
+                && !find(builder, LESS_THAN_OR_EQUAL_TO_OPERATOR)
+                && !find(builder, COMPARE_OPERATOR)
+                && !find(builder, GREATER_THAN_OR_EQUAL_TO_OPERATOR)
+                && !find(builder, GREATER_THAN_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(COMPARISON);
+        return true;
+    }
+
+    /*
+     * Containment: MemberReference "in" Primary
+     */
+    public static boolean parseContainment(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseMemberReference(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, IN_KEYWORD)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(CONTAINMENT);
+        return true;
+    }
+
+    /*
+     * Assignability: "is" Type Primary
+     */
+    public static boolean parseAssignability(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, IS_KEYWORD)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parseType(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(ASSIGNABILITY);
+        return true;
+    }
+
+    /*
+     * Inheritance: "satisfies" Type Primary
+     */
+    public static boolean parseInheritance(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, SATISFIES_KEYWORD)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parseType(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(INHERITANCE);
+        return true;
+    }
+
+    /*
+     * Not: "!" Primary
+     */
+    public static boolean parseNot(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, NOT_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(NOT);
+        return true;
+    }
+
+    /*
+     * LogicalCondition: Primary ( "||" | "&&" ) Primary
+     */
+    public static boolean parseLogicalCondition(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, OR_OPERATOR)
+                && !find(builder, AND_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(LOGICAL_CONDITION);
+        return true;
+    }
+
+    /*
+     * Existance: ( "exists" | "nonempty" ) Primary
+     */
+    public static boolean parseExistance(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, EXISTS_KEYWORD)
+              && !find(builder, NONEMPTY_KEYWORD)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(EXISTANCE);
+        return true;
+    }
+
+    /*
+     * Default: Primary "?" Primary
+     */
+    public static boolean parseDefault(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, DEFAULT_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(DEFAULT);
+        return true;
+    }
+
+    /*
+     * NullsafeInvocation: Primary "?." MemberReference Arguments?
+     */
+    public static boolean parseNullsafeInvocation(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, EXISTS_KEYWORD)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parseMemberName(builder)) {
+            builder.error(CeylonBundle.message("expected.memberreference"));
+            marker.rollbackTo();
+            return false;
+        }
+        parseArguments(builder);
+        marker.done(NULLSAFE_INVOCATION);
+        return true;
+    }
+
+    /*
+     * KeyedItemAccess: Primary ( "[" | "?[" ) Primary "]"
+     */
+    public static boolean parseKeyedItemAccess(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, LEFT_BRACKET_OPERATOR)
+                && !find(builder, NULLSAFE_LOOKUP_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, RIGHT_BRACKET_OPERATOR)) {
+            builder.error(CeylonBundle.message("expected.rightbracket"));
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(KEYED_ITEM_ACCESS);
+        return true;
+    }
+
+    /*
+     * Spans: Primary "[" Primary ( ".." Primary | "..." ) "]"
+     */
+    public static boolean parseSpans(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, LEFT_BRACKET_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+            marker.rollbackTo();
+            return false;
+        }
+        if (find(builder, RANGE_OPERATOR)) {
+            if (!parsePrimary(builder)) {
+                builder.error(CeylonBundle.message("expected.primary"));
+                marker.done(SPANS);
+                return true;
+            }
+        } else if (find(builder, RANGE_OPERATOR)) {
+        } else {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, RIGHT_BRACKET_OPERATOR)) {
+            builder.error(CeylonBundle.message("expected.rightbracket"));
+            marker.done(SPANS);
+            return true;
+        }
+        marker.done(SPANS);
+        return true;
+    }
+
+    /*
+     * SpreadInvocation: Primary ( "[]." MemberReference | Arguments )
+     */
+    public static boolean parseSpreadInvocation(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (find(builder, SPREAD_OPERATOR)) {
+            if (!parseMemberReference(builder)) {
+                builder.error(CeylonBundle.message("expected.memberreference"));
+            }
+        } else if (parseArguments(builder)) {
+        } else {
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(SPREAD_INVOCATION);
+        return true;
+    }
+
+    /*
+     * RangeOrEntryConstruction: Primary ( ".." | "->" ) Primary
+     */
+    public static boolean parseRangeOrEntryConstruction(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, RANGE_OPERATOR)
+                && !find(builder, ENTRY_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+        }
+        marker.done(RANGE_OR_ENTRY_CONSTRUCTION);
+        return true;
+    }
+
+    /*
+     * Conditional: Primary ( "then" | "else" ) Primary
+     */
+    public static boolean parseConditional(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, THEN_KEYWORD)
+                && !find(builder, ELSE_KEYWORD)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+        }
+        marker.done(CONDITIONAL);
+        return true;
+    }
+
+    /*
+     * InversionOperation: ( "+" | "-" ) Primary
+     */
+    public static boolean parseInversionOperation(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, ADD_OPERATOR)
+                && !find(builder, SUBTRACT_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+        }
+        marker.done(INVERSION_OPERATION);
+        return true;
+    }
+
+    /*
+     * NumericalOperation: Primary ( "+" | "-" | "*" | "/" | "%" | "**" ) Primary
+     */
+    public static boolean parseNumericalOperation(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, ADD_OPERATOR)
+                && !find(builder, SUBTRACT_OPERATOR)
+                && !find(builder, MULTIPLY_OPERATOR)
+                && !find(builder, DIVIDE_OPERATOR)
+                && !find(builder, MODULO_OPERATOR)
+                && !find(builder, EXPONENT)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+        }
+        marker.done(NUMERICAL_OPERATION);
+        return true;
+    }
+
+    /*
+     * Complement: "~" Primary
+     */
+    public static boolean parseComplement(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!find(builder, COMPLEMENT_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+        }
+        marker.done(COMPLEMENT);
+        return true;
+    }
+
+    /*
+     * SlotwiseOperator: Primary ( "|" | "&" | "^" | "~" ) Primary
+     */
+    public static boolean parseSlotwiseOperator(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parsePrimary(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, OR_OPERATOR)
+                && !find(builder, AND_OPERATOR)
+                && !find(builder, XOR_OPERATOR)
+                && !find(builder, COMPLEMENT_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!parsePrimary(builder)) {
+            builder.error(CeylonBundle.message("expected.primary"));
+        }
+        marker.done(SLOTWISE_OPERATOR);
         return true;
     }
 }

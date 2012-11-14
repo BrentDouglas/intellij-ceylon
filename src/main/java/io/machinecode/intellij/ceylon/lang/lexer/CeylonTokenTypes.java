@@ -59,6 +59,7 @@ public interface CeylonTokenTypes extends TokenType {
     CeylonTokenType RIGHT_BRACE_OPERATOR = new CeylonTokenType("}");
     CeylonTokenType LEFT_PARENTHESIS_OPERATOR = new CeylonTokenType("(");
     CeylonTokenType RIGHT_PARENTHESIS_OPERATOR = new CeylonTokenType(")");
+    CeylonTokenType NULLSAFE_LOOKUP_OPERATOR = new CeylonTokenType("?[");
     CeylonTokenType LEFT_BRACKET_OPERATOR = new CeylonTokenType("[");
     CeylonTokenType RIGHT_BRACKET_OPERATOR = new CeylonTokenType("]");
     CeylonTokenType ARRAY_OPERATOR = new CeylonTokenType("[]");
@@ -106,6 +107,7 @@ public interface CeylonTokenTypes extends TokenType {
     CeylonTokenType OR_ASSIGN_OPERATOR = new CeylonTokenType("||=");
     CeylonTokenType AND_ASSIGN_OPERATOR = new CeylonTokenType("&&=");
     CeylonTokenType AMPERSAND_OPERATOR = new CeylonTokenType("@");
+    CeylonTokenType FORMAT_OPERATOR = new CeylonTokenType("$");
 
     CeylonTokenType ESCAPE_SEQUENCE = new CeylonTokenType("Escape sequence");
 

@@ -55,16 +55,11 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
 
     }
 
-    //Assignment: ":=" | ".=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||="
-    @Test
-    public void testAssignment() {
-
-    }
-
     //Atom: Literal | StringTemplate | SelfReference | ParExpression
     @Test
     public void testAtom() {
-
+        assertEmpty(parseLines("atom.lines.pass.ceylon", ATOM));
+        assertEmpty(failParseLines("atom.lines.fail.ceylon", ATOM));
     }
 
     //Attribute: Annotation* (SimpleAttribute | AttributeGetter | AttributeSetter)
@@ -286,7 +281,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //ExpressionStatement: ( Assignment | IncrementOrDecrement | Invocation ) ";"
     @Test
     public void testExpressionStatement() {
-
+        assertEmpty(parseLines("expression_statement.lines.pass.ceylon", EXPRESSION_STATEMENT));
+        assertEmpty(failParseLines("expression_statement.lines.fail.ceylon", EXPRESSION_STATEMENT));
     }
 
     //ExtendedType: "extends" ("super" ".")? Type PositionalArguments
@@ -404,11 +400,6 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
         assertEmpty(failParseLines("import_wildcard.lines.fail.ceylon", IMPORT_WILDCARD));
     }
 
-    @Test
-    public void testIncrementOrDecrement() {
-
-    }
-
     //Initializer: ":=" Expression
     @Test
     public void testInitializer() {
@@ -454,7 +445,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //Invocation: Primary Arguments | SequenceInstantiation
     @Test
     public void testInvocation() {
-
+        assertEmpty(parseLines("invocation.lines.pass.ceylon", INVOCATION));
+        assertEmpty(failParseLines("invocation.lines.fail.ceylon", INVOCATION));
     }
 
     //IsCondition: "is" (TypedVariable Specifier | UnionType MemberName)
@@ -472,7 +464,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //Literal: IntegerLiteral | FloatLiteral | CharacterLiteral | StringLiteral | QuotedLiteral
     @Test
     public void testLiteral() {
-
+        assertEmpty(parseLines("literal.lines.pass.ceylon", LITERAL));
+        assertEmpty(failParseLines("literal.lines.fail.ceylon", LITERAL));
     }
 
     //LocalNamedArgument: (UnionType | "value") MemberName (Block | NamedArguments)
@@ -515,7 +508,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //MethodAttributeAlias: MemberName "="
     @Test
     public void testMethodAttributeAlias() {
-
+        assertEmpty(parseLines("method_attribute_alias.lines.pass.ceylon", METHOD_ATTRIBUTE_ALIAS));
+        assertEmpty(failParseLines("method_attribute_alias.lines.fail.ceylon", METHOD_ATTRIBUTE_ALIAS));
     }
 
     //MethodHeader: (UnionType | "function" | "void") MemberName TypeParams? Params+ Metatypes? TypeConstraints?
@@ -566,15 +560,11 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
 
     }
 
-    @Test
-    public void testOperatorExpression() {
-
-    }
-
     //PackageName: PIdentifier
     @Test
     public void testPackageName() {
-
+        assertEmpty(parseLines("package_name.lines.pass.ceylon", PACKAGE_NAME));
+        assertEmpty(failParseLines("package_name.lines.fail.ceylon", PACKAGE_NAME));
     }
 
     //Param: Annotation* (SimpleParam | CallableParam | EntryParamPair)
@@ -592,7 +582,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //ParExpression: "(" Expression ")"
     @Test
     public void testParExpression() {
-
+        assertEmpty(parseLines("par_expression.lines.pass.ceylon", PAR_EXPRESSION));
+        assertEmpty(failParseLines("par_expression.lines.fail.ceylon", PAR_EXPRESSION));
     }
 
     //PositionalArguments: "(" Expression ("," Expression)* ("," Sequence)? | Sequence? ")"
@@ -604,7 +595,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //Primary: Atom | Meta | MemberReference | Invocation
     @Test
     public void testPrimary() {
-
+        assertEmpty(parseLines("primary.lines.pass.ceylon", PRIMARY));
+        assertEmpty(failParseLines("primary.lines.fail.ceylon", PRIMARY));
     }
 
     //Receiver: Primary
@@ -658,13 +650,15 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //SequencedType: TypeName "..."
     @Test
     public void testSequencedType() {
-
+        assertEmpty(parseLines("sequenced_type.lines.pass.ceylon", SEQUENCED_TYPE));
+        assertEmpty(failParseLines("sequenced_type.lines.fail.ceylon", SEQUENCED_TYPE));
     }
 
     //SequencedTypeParam: TypeName "..."
     @Test
     public void testSequencedTypeParam() {
-
+        assertEmpty(parseLines("sequenced_type_param.lines.pass.ceylon", SEQUENCED_TYPE_PARAM));
+        assertEmpty(failParseLines("sequenced_type_param.lines.fail.ceylon", SEQUENCED_TYPE_PARAM));
     }
 
     //SequenceInstantiation = "{" Sequence? "}"
@@ -688,13 +682,15 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //Specification: MemberName Specifier ";"
     @Test
     public void testSpecification() {
-
+        assertEmpty(parseLines("specification.lines.pass.ceylon", SPECIFICATION));
+        assertEmpty(failParseLines("specification.lines.fail.ceylon", SPECIFICATION));
     }
 
     //SpecifiedNamedArgument: MemberName Specifier ";"
     @Test
     public void testSpecifiedNamedArgument() {
-
+        assertEmpty(parseLines("specified_named_argument.lines.pass.ceylon", SPECIFIED_NAMED_ARGUMENT));
+        assertEmpty(failParseLines("specified_named_argument.lines.fail.ceylon", SPECIFIED_NAMED_ARGUMENT));
     }
 
     //Specifier: "=" Expression
@@ -712,7 +708,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //StringTemplate: StringLiteral (Expression StringLiteral)+
     @Test
     public void testStringTemplate() {
-
+        assertEmpty(parseLines("string_template.lines.pass.ceylon", STRING_TEMPLATE));
+        assertEmpty(failParseLines("string_template.lines.fail.ceylon", STRING_TEMPLATE));
     }
 
     //Switch: "switch" "(" Expression ")"
@@ -873,5 +870,189 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     @Test
     public void testWhile() {
 
+    }
+
+
+
+
+
+
+
+
+
+    /*
+    * OperatorExpression: Invocation | Assignment | CompoundAssignment | Format | Equalities | Comparison |
+    *                    Containment | Assignability | Inheritance | Not | LogicalCondition | Existance | Default |
+    *                    NullsafeInvocation | KeyedItemAccess | Spans | SpreadInvocation | RangeOrEntryConstruction |
+    *                    Conditional | IncrementOrDecrement | NumericalOperation | NumericalAssignment |
+    *                    SlotwiseOperator | SlotwiseAssignment | InversionOperation | Complement
+    */
+    @Test
+    public void testOperatorExpression() {
+    }
+
+    /*
+     * IncrementOrDecrement: MemberName ( "++" | "--" ) | ( "++" | "--" ) MemberName
+     */
+    @Test
+    public void testIncrementOrDecrement() {
+        assertEmpty(parseLines("increment_or_decrement.lines.pass.ceylon", INCREMENT_OR_DECREMENT));
+        assertEmpty(failParseLines("increment_or_decrement.lines.fail.ceylon", INCREMENT_OR_DECREMENT));
+    }
+
+    /*
+     * Assignment: MemberName ( ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||=" ) Primary
+     */
+    @Test
+    public void testAssignment() {
+        assertEmpty(parseLines("assignment.lines.pass.ceylon", ASSIGNMENT));
+        assertEmpty(failParseLines("assignment.lines.fail.ceylon", ASSIGNMENT));
+    }
+
+    /*
+     * Equalities: Primary ".=" MemberName Arguments?
+     */
+    @Test
+    public void testCompountAssignment() {
+    }
+
+    /*
+     * Format: "$" Primary
+     */
+    @Test
+    public void testFormat() {
+    }
+
+    /*
+     * Equalities: Primary ( "===" | "==" | "!=" ) Primary
+     */
+    @Test
+    public void testEqualities() {
+    }
+
+    /*
+     * Comparison: Primary ( "<" | "<=" | "<=>" | "=>" | ">" ) Primary
+     */
+    @Test
+    public void testComparison() {
+    }
+
+    /*
+     * Containment: MemberName "in" Primary
+     */
+    @Test
+    public void testContainment() {
+    }
+
+    /*
+     * Assignability: "is" Type Primary
+     */
+    @Test
+    public void testAssignability() {
+    }
+
+    /*
+     * Inheritance: "satisfies" Type Primary
+     */
+    @Test
+    public void testInheritance() {
+    }
+
+    /*
+     * Not: "!" Primary
+     */
+    @Test
+    public void testNot() {
+    }
+
+    /*
+     * LogicalCondition: Primary ( "||" | "&&" ) Primary
+     */
+    @Test
+    public void testLogicalCondition() {
+    }
+
+    /*
+     * Existance: ( "exists" | "nonempty" ) Primary
+     */
+    @Test
+    public void testExistance() {
+    }
+
+    /*
+     * Default: Primary "?" Primary
+     */
+    @Test
+    public void testDefault() {
+    }
+
+    /*
+     * NullsafeInvocation: Primary "?." MemberName Arguments?
+     */
+    @Test
+    public void testNullsafeInvocation() {
+    }
+
+    /*
+     * KeyedItemAccess: Primary ( "[" | "?[" ) Primary "]"
+     */
+    @Test
+    public void testKeyedItemAccess() {
+    }
+
+    /*
+     * Spans: Primary "[" Primary ( ".." Primary | "..." ) "]"
+     */
+    @Test
+    public void testSpans() {
+    }
+
+    /*
+     * SpreadInvocation: Primary ( "[]." MemberName | Arguments )
+     */
+    @Test
+    public void testSpreadInvocation() {
+    }
+
+    /*
+     * RangeOrEntryConstruction: Primary ( ".." | "->" ) Primary
+     */
+    @Test
+    public void testRangeOrEntryConstruction() {
+    }
+
+    /*
+     * Conditional: Primary ( "then" | "else" ) Primary
+     */
+    @Test
+    public void testConditional() {
+    }
+
+    /*
+     * InversionOperation: ( "+" | "-" ) Primary
+     */
+    @Test
+    public void testInversionOperation() {
+    }
+
+    /*
+     * NumericalOperation: Primary ( "+" | "-" | "*" | "/" | "%" | "**" ) Primary
+     */
+    @Test
+    public void testNumericalOperation() {
+    }
+
+    /*
+     * Complement: "~" Primary
+     */
+    @Test
+    public void testComplement() {
+    }
+
+    /*
+     * SlotwiseOperator: Primary ( "|" | "&" | "^" | "~" ) Primary
+     */
+    @Test
+    public void testSlotwiseOperator() {
     }
 }
