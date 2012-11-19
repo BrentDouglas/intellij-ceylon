@@ -1,3 +1,4 @@
+// CHECKSTYLE:OFF
 package io.machinecode.intellij.ceylon.lang.lexer;
 
 import com.intellij.lexer.FlexLexer;

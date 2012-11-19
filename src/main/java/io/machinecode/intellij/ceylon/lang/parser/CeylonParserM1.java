@@ -1958,6 +1958,11 @@ public class CeylonParserM1 extends CeylonParser {
      */
     public static boolean parsePrimary(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
+        final IElementType next = builder.getTokenType();
+        if (next != LOWERCASE_IDENTIFIER && next != PACKAGE_IDENTIFIER) {
+            marker.rollbackTo();
+            return false;
+        }
         if (!parseAtom(builder)
                 && !parseMeta(builder)
                 && !parseMemberReference(builder)
@@ -2776,25 +2781,23 @@ public class CeylonParserM1 extends CeylonParser {
     }
 
     /*
-     * IncrementOrDecrement: MemberReference ( "++" | "--" ) | ( "++" | "--" ) MemberReference
+     * IncrementOrDecrement: Primary ( "++" | "--" ) | ( "++" | "--" ) Primary
      */
     public static boolean parseIncrementOrDecrement(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (parseMemberReference(builder)) {
+        if (parsePrimary(builder)) {
             if (!find(builder, INCREMENT_OPERATOR)
                     && !find(builder, DECREMENT_OPERATOR)) {
                 builder.error(CeylonBundle.message("expected.incrementordecrement"));
-                marker.rollbackTo();
-                return false;
             }
-        }
-        if (!find(builder, INCREMENT_OPERATOR)
-                && !find(builder, DECREMENT_OPERATOR)) {
-            if (parseMemberReference(builder)) {
-                builder.error(CeylonBundle.message("expected.memberreference"));
-                marker.rollbackTo();
-                return false;
+        } else if (find(builder, INCREMENT_OPERATOR)
+                || find(builder, DECREMENT_OPERATOR)) {
+            if (!parsePrimary(builder)) {
+                builder.error(CeylonBundle.message("expected.primary"));
             }
+        } else {
+            marker.rollbackTo();
+            return false;
         }
         marker.done(INCREMENT_OR_DECREMENT);
         return true;

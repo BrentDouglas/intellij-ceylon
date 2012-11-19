@@ -47,7 +47,9 @@
         <module name="CovariantEquals"/>
         <module name="ArrayTypeStyle"/>
 
+        <module name="FileContentsHolder"/>
     </module>
 
+    <module name="SuppressionCommentFilter"/>
 </module>
 
