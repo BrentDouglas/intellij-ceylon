@@ -51,7 +51,7 @@ public interface CeylonElementTypes {
     CeylonElementType ENTRY_TYPE = new CeylonElementType("");
     CeylonElementType ENTRY_VARIABLE_PAIR = new CeylonElementType("");
     CeylonElementType EQUALITIES = new CeylonElementType("");
-    CeylonElementType EXISTANCE = new CeylonElementType("");
+    CeylonElementType EXISTENCE = new CeylonElementType("");
     CeylonElementType EXISTS_OR_IS_NONEMPTY_CONDITION = new CeylonElementType("");
     CeylonElementType EXPRESSION = new CeylonElementType("");
     CeylonElementType EXPRESSION_STATEMENT = new CeylonElementType("");

@@ -178,7 +178,7 @@ public class CeylonParserM1 extends CeylonParser {
         if (root == INHERITANCE) parseInheritance(builder);
         if (root == NOT) parseNot(builder);
         if (root == LOGICAL_CONDITION) parseLogicalCondition(builder);
-        if (root == EXISTANCE) parseExistance(builder);
+        if (root == EXISTENCE) parseExistance(builder);
         if (root == DEFAULT) parseDefault(builder);
         if (root == NULLSAFE_INVOCATION) parseNullsafeInvocation(builder);
         if (root == KEYED_ITEM_ACCESS) parseKeyedItemAccess(builder);
@@ -1959,7 +1959,12 @@ public class CeylonParserM1 extends CeylonParser {
     public static boolean parsePrimary(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         final IElementType next = builder.getTokenType();
-        if (next != LOWERCASE_IDENTIFIER && next != PACKAGE_IDENTIFIER) {
+        if (next != LOWERCASE_IDENTIFIER
+                && next != PACKAGE_IDENTIFIER
+                && next != INTEGER_LITERAL
+                && next != STRING_LITERAL
+                && next != QUOTED_LITERAL
+                && next != CHARACTER_LITERAL) {
             marker.rollbackTo();
             return false;
         }
@@ -3045,7 +3050,7 @@ public class CeylonParserM1 extends CeylonParser {
             marker.rollbackTo();
             return false;
         }
-        marker.done(EXISTANCE);
+        marker.done(EXISTENCE);
         return true;
     }
 

@@ -182,7 +182,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
         if (root == INHERITANCE) parseInheritance(builder);
         if (root == NOT) parseNot(builder);
         if (root == LOGICAL_CONDITION) parseLogicalCondition(builder);
-        if (root == EXISTANCE) parseExistance(builder);
+        if (root == EXISTENCE) parseExistance(builder);
         if (root == DEFAULT) parseDefault(builder);
         if (root == NULLSAFE_INVOCATION) parseNullsafeInvocation(builder);
         if (root == KEYED_ITEM_ACCESS) parseKeyedItemAccess(builder);
@@ -3096,7 +3096,7 @@ public class CeylonParserM4 extends CeylonParser implements PsiParser, CeylonTok
             marker.rollbackTo();
             return false;
         }
-        marker.done(EXISTANCE);
+        marker.done(EXISTENCE);
         return true;
     }
 
