@@ -254,11 +254,12 @@ public class CeylonParserM1 extends CeylonParser {
             marker.rollbackTo();
             return false;
         }
-        if (!parseArguments(builder)) {
-            //TODO: Clarify
+        if (parseLiteral(builder)) {
             while (parseLiteral(builder)) {
                 //
             }
+        } else {
+            parseArguments(builder);
         }
         marker.done(ANNOTATION);
         return true;
@@ -2002,16 +2003,19 @@ public class CeylonParserM1 extends CeylonParser {
             marker.rollbackTo();
             return false;
         }
-        if (parseExpression(builder)) {
+        if (parseSequence(builder)) {
+
+        } else if (parseExpression(builder)) {
             while (find(builder, COMMA_OPERATOR)) {
-                if (!parseExpression(builder)) {
-                    if (parseSequence(builder)) {
+                if (parseSequence(builder)) {
+                    break;
+                } else {
+                    if (!parseExpression(builder)) {
+                        builder.error(CeylonBundle.message("expected.expressionorsequence"));
                         break;
                     }
-                    builder.error(CeylonBundle.message("expected.expressionorsequence"));
                 }
             }
-        } else if (parseSequence(builder)) {
         } else {
             builder.error(CeylonBundle.message("expected.expressionorsequence"));
         }

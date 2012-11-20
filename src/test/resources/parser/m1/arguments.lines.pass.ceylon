@@ -1,1 +1,1 @@
-TODO FIX THIS
+(getProduct(id), 1)
