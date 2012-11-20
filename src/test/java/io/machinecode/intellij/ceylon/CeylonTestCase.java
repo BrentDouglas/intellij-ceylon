@@ -17,16 +17,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author Brent Douglas <brent.n.douglas@gmail.com>
  */
 public abstract class CeylonTestCase extends PsiTestCase {
-
-    private static final String TEMP_FILENAME = "temp.ceylon";
 
     private IdeaProjectTestFixture fixture;
 
@@ -110,8 +110,7 @@ public abstract class CeylonTestCase extends PsiTestCase {
 
     protected Set<String> parseFileSections(final String filename, final CeylonElementType type) {
         final Set<String> failed = new HashSet<String>();
-        final Set<PsiElement> elements = new HashSet<PsiElement>();
-        final Set<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
+        final List<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
         String text;
         StringBuilder builder = new StringBuilder();
         for (final String line : lines) {
@@ -128,7 +127,7 @@ public abstract class CeylonTestCase extends PsiTestCase {
                 }
                 builder = new StringBuilder();
             } else {
-                builder.append(line);
+                builder.append('\n').append(line);
             }
         }
         text = builder.toString();
@@ -185,7 +184,7 @@ public abstract class CeylonTestCase extends PsiTestCase {
 
     protected Set<String> failParseLines(final String filename, final CeylonElementType type) {
         final Set<String> failed = new HashSet<String>();
-        final Set<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
+        final List<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
         for (final String line : lines) {
             try {
                 final PsiElement parent = CeylonPsiCreator.createElement(new CompositeElement(type));
@@ -206,7 +205,7 @@ public abstract class CeylonTestCase extends PsiTestCase {
 
     protected Set<String> failParseFileSections(final String filename, final CeylonElementType type) {
         final Set<String> failed = new HashSet<String>();
-        final Set<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
+        final List<String> lines = readFileLines(getResourceDirectory() + '/' + filename);
 
         StringBuilder builder = new StringBuilder();
         for (final String line : lines) {
@@ -227,7 +226,7 @@ public abstract class CeylonTestCase extends PsiTestCase {
                 }
                 builder = new StringBuilder();
             } else {
-                builder.append(line);
+                builder.append('\n').append(line);
             }
         }
 
@@ -288,11 +287,11 @@ public abstract class CeylonTestCase extends PsiTestCase {
      * @param path The path to the resource file
      * @return The lines of the resource file
      */
-    private static Set<String> readFileLines(final String path) {
+    private static List<String> readFileLines(final String path) {
         try {
             final InputStream stream = CeylonTestCase.class.getClassLoader().getResourceAsStream(path);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            final Set<String> lines = new HashSet<String>();
+            final List<String> lines = new ArrayList<String>();
             String line;
             while ((line = reader.readLine()) != null) {
                 lines.add(line);

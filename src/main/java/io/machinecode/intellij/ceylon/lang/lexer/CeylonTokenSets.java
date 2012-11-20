@@ -16,12 +16,7 @@ public class CeylonTokenSets {
     );
 
     public static final TokenSet COMMENT_TOKENS = TokenSet.create(
-            CeylonTokenTypes.LINE_COMMENT,
-            CeylonTokenTypes.MULTI_LINE_COMMENT
-    );
-
-    public static final TokenSet TOKEN_SEPARATOR_TOKENS = TokenSet.create(
-            CeylonTokenTypes.WHITE_SPACE,
+            CeylonTokenTypes.SHELL_COMMENT,
             CeylonTokenTypes.LINE_COMMENT,
             CeylonTokenTypes.MULTI_LINE_COMMENT
     );

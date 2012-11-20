@@ -389,8 +389,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //FunctionalNamedArgument: (UnionType | "function" | "void") MemberName Params+ (Block | NamedArguments)
     @Test
     public void testFunctionalNamedArgument() {
-        assertEmpty(parseLines("functional_named_argument.lines.pass.ceylon", FUNCTIONAL_NAMED_ARGUMENT));
-        assertEmpty(failParseLines("functional_named_argument.lines.fail.ceylon", FUNCTIONAL_NAMED_ARGUMENT));
+        assertEmpty(parseFileSections("functional_named_argument.lines.pass.ceylon", FUNCTIONAL_NAMED_ARGUMENT));
+        assertEmpty(failParseFileSections("functional_named_argument.lines.fail.ceylon", FUNCTIONAL_NAMED_ARGUMENT));
     }
 
     //FunctionMeta: MemberName TypeArguments?
@@ -536,8 +536,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //LocalNamedArgument: (UnionType | "value") MemberName (Block | NamedArguments)
     @Test
     public void testLocalNamedArgument() {
-        assertEmpty(parseLines("local_named_argument.lines.pass.ceylon", LOCAL_NAMED_ARGUMENT));
-        assertEmpty(failParseLines("local_named_argument.lines.fail.ceylon", LOCAL_NAMED_ARGUMENT));
+        assertEmpty(parseFileSections("local_named_argument.lines.pass.ceylon", LOCAL_NAMED_ARGUMENT));
+        assertEmpty(failParseFileSections("local_named_argument.lines.fail.ceylon", LOCAL_NAMED_ARGUMENT));
     }
 
     //LoopCondition: "while" "(" Condition ")"
@@ -606,15 +606,15 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //NamedArgument: SpecifiedNamedArgument | LocalNamedArgument | FunctionalNamedArgument | Object
     @Test
     public void testNamedArgument() {
-        assertEmpty(parseLines("named_argument.lines.pass.ceylon", NAMED_ARGUMENT));
-        assertEmpty(failParseLines("named_argument.lines.fail.ceylon", NAMED_ARGUMENT));
+        assertEmpty(parseFileSections("named_argument.lines.pass.ceylon", NAMED_ARGUMENT));
+        assertEmpty(failParseFileSections("named_argument.lines.fail.ceylon", NAMED_ARGUMENT));
     }
 
     //NamedArguments: "{" NamedArgument* Sequence? "}"
     @Test
     public void testNamedArguments() {
-        assertEmpty(parseLines("named_arguments.lines.pass.ceylon", NAMED_ARGUMENTS));
-        assertEmpty(failParseLines("named_arguments.lines.fail.ceylon", NAMED_ARGUMENTS));
+        assertEmpty(parseFileSections("named_arguments.lines.pass.ceylon", NAMED_ARGUMENTS));
+        assertEmpty(failParseFileSections("named_arguments.lines.fail.ceylon", NAMED_ARGUMENTS));
     }
 
     //Object: Annotation* ObjectHeader ClassBody
@@ -988,14 +988,6 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
         assertEmpty(failParseLines("while.lines.fail.ceylon", WHILE));
     }
 
-
-
-
-
-
-
-
-
     /*
     * OperatorExpression: Invocation | Assignment | CompoundAssignment | Format | Equalities | Comparison |
     *                    Containment | Assignability | Inheritance | Not | LogicalCondition | Existance | Default |
@@ -1008,7 +1000,7 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     }
 
     /*
-     * IncrementOrDecrement: MemberName ( "++" | "--" ) | ( "++" | "--" ) MemberName
+     * IncrementOrDecrement: ( ( "++" | "--" ) Primary ) | ( Primary ( "++" | "--" ) )
      */
     @Test
     public void testIncrementOrDecrement() {
@@ -1023,194 +1015,5 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     public void testAssignment() {
         assertEmpty(parseLines("assignment.lines.pass.ceylon", ASSIGNMENT));
         assertEmpty(failParseLines("assignment.lines.fail.ceylon", ASSIGNMENT));
-    }
-
-    /*
-     * Equalities: Primary ".=" MemberName Arguments?
-     */
-    @Test
-    public void testCompountAssignment() {
-        assertEmpty(parseLines("compound_assignment.lines.pass.ceylon", COMPOUND_ASSIGNMENT));
-        assertEmpty(failParseLines("compound_assignment.lines.fail.ceylon", COMPOUND_ASSIGNMENT));
-    }
-
-    /*
-     * Format: "$" Primary
-     */
-    @Test
-    public void testFormat() {
-        assertEmpty(parseLines("format.lines.pass.ceylon", FORMAT));
-        assertEmpty(failParseLines("format.lines.fail.ceylon", FORMAT));
-    }
-
-    /*
-     * Equalities: Primary ( "===" | "==" | "!=" ) Primary
-     */
-    @Test
-    public void testEqualities() {
-        assertEmpty(parseLines("equalities.lines.pass.ceylon", EQUALITIES));
-        assertEmpty(failParseLines("equalities.lines.fail.ceylon", EQUALITIES));
-    }
-
-    /*
-     * Comparison: Primary ( "<" | "<=" | "<=>" | "=>" | ">" ) Primary
-     */
-    @Test
-    public void testComparison() {
-        assertEmpty(parseLines("comparison.lines.pass.ceylon", COMPARISON));
-        assertEmpty(failParseLines("comparison.lines.fail.ceylon", COMPARISON));
-    }
-
-    /*
-     * Containment: MemberName "in" Primary
-     */
-    @Test
-    public void testContainment() {
-        assertEmpty(parseLines("containment.lines.pass.ceylon", CONTAINMENT));
-        assertEmpty(failParseLines("containment.lines.fail.ceylon", CONTAINMENT));
-    }
-
-    /*
-     * Assignability: "is" Type Primary
-     */
-    @Test
-    public void testAssignability() {
-        assertEmpty(parseLines("assignability.lines.pass.ceylon", ASSIGNABILITY));
-        assertEmpty(failParseLines("assignability.lines.fail.ceylon", ASSIGNABILITY));
-    }
-
-    /*
-     * Inheritance: "satisfies" Type Primary
-     */
-    @Test
-    public void testInheritance() {
-        assertEmpty(parseLines("inheritance.lines.pass.ceylon", INHERITANCE));
-        assertEmpty(failParseLines("inheritance.lines.fail.ceylon", INHERITANCE));
-    }
-
-    /*
-     * Not: "!" Primary
-     */
-    @Test
-    public void testNot() {
-        assertEmpty(parseLines("not.lines.pass.ceylon", NOT));
-        assertEmpty(failParseLines("not.lines.fail.ceylon", NOT));
-    }
-
-    /*
-     * LogicalCondition: Primary ( "||" | "&&" ) Primary
-     */
-    @Test
-    public void testLogicalCondition() {
-        assertEmpty(parseLines("logical_condition.lines.pass.ceylon", LOGICAL_CONDITION));
-        assertEmpty(failParseLines("logical_condition.lines.fail.ceylon", LOGICAL_CONDITION));
-    }
-
-    /*
-     * Existence: ( "exists" | "nonempty" ) Primary
-     */
-    @Test
-    public void testExistence() {
-        assertEmpty(parseLines("existence.lines.pass.ceylon", EXISTENCE));
-        assertEmpty(failParseLines("existence.lines.fail.ceylon", EXISTENCE));
-    }
-
-    /*
-     * Default: Primary "?" Primary
-     */
-    @Test
-    public void testDefault() {
-        assertEmpty(parseLines("default.lines.pass.ceylon", DEFAULT));
-        assertEmpty(failParseLines("default.lines.fail.ceylon", DEFAULT));
-    }
-
-    /*
-     * NullsafeInvocation: Primary "?." MemberName Arguments?
-     */
-    @Test
-    public void testNullsafeInvocation() {
-        assertEmpty(parseLines("nullsafe_invocation.lines.pass.ceylon", NULLSAFE_INVOCATION));
-        assertEmpty(failParseLines("nullsafe_invocation.lines.fail.ceylon", NULLSAFE_INVOCATION));
-    }
-
-    /*
-     * KeyedItemAccess: Primary ( "[" | "?[" ) Primary "]"
-     */
-    @Test
-    public void testKeyedItemAccess() {
-        assertEmpty(parseLines("keyed_item_access.lines.pass.ceylon", KEYED_ITEM_ACCESS));
-        assertEmpty(failParseLines("keyed_item_access.lines.fail.ceylon", KEYED_ITEM_ACCESS));
-    }
-
-    /*
-     * Spans: Primary "[" Primary ( ".." Primary | "..." ) "]"
-     */
-    @Test
-    public void testSpans() {
-        assertEmpty(parseLines("spans.lines.pass.ceylon", SPANS));
-        assertEmpty(failParseLines("spans.lines.fail.ceylon", SPANS));
-    }
-
-    /*
-     * SpreadInvocation: Primary ( "[]." MemberName | Arguments )
-     */
-    @Test
-    public void testSpreadInvocation() {
-        assertEmpty(parseLines("spread_invocation.lines.pass.ceylon", SPREAD_INVOCATION));
-        assertEmpty(failParseLines("spread_invocation.lines.fail.ceylon", SPREAD_INVOCATION));
-    }
-
-    /*
-     * RangeOrEntryConstruction: Primary ( ".." | "->" ) Primary
-     */
-    @Test
-    public void testRangeOrEntryConstruction() {
-        assertEmpty(parseLines("range_or_entry_construction.lines.pass.ceylon", RANGE_OR_ENTRY_CONSTRUCTION));
-        assertEmpty(failParseLines("range_or_entry_construction.lines.fail.ceylon", RANGE_OR_ENTRY_CONSTRUCTION));
-    }
-
-    /*
-     * Conditional: Primary ( "then" | "else" ) Primary
-     */
-    @Test
-    public void testConditional() {
-        assertEmpty(parseLines("conditional.lines.pass.ceylon", CONDITIONAL));
-        assertEmpty(failParseLines("conditional.lines.fail.ceylon", CONDITIONAL));
-    }
-
-    /*
-     * InversionOperation: ( "+" | "-" ) Primary
-     */
-    @Test
-    public void testInversionOperation() {
-        assertEmpty(parseLines("inversion_operation.lines.pass.ceylon", INVERSION_OPERATION));
-        assertEmpty(failParseLines("inversion_operation.lines.fail.ceylon", INVERSION_OPERATION));
-    }
-
-    /*
-     * NumericalOperation: Primary ( "+" | "-" | "*" | "/" | "%" | "**" ) Primary
-     */
-    @Test
-    public void testNumericalOperation() {
-        assertEmpty(parseLines("numerical_operation.lines.pass.ceylon", NUMERICAL_OPERATION));
-        assertEmpty(failParseLines("numerical_operation.lines.fail.ceylon", NUMERICAL_OPERATION));
-    }
-
-    /*
-     * Complement: "~" Primary
-     */
-    @Test
-    public void testComplement() {
-        assertEmpty(parseLines("complement.lines.pass.ceylon", COMPLEMENT));
-        assertEmpty(failParseLines("complement.lines.fail.ceylon", COMPLEMENT));
-    }
-
-    /*
-     * SlotwiseOperator: Primary ( "|" | "&" | "^" | "~" ) Primary
-     */
-    @Test
-    public void testSlotwiseOperator() {
-        assertEmpty(parseLines("slotwise_operation.lines.pass.ceylon", SLOTWISE_OPERATOR));
-        assertEmpty(failParseLines("slotwise_operation.lines.fail.ceylon", SLOTWISE_OPERATOR));
     }
 }

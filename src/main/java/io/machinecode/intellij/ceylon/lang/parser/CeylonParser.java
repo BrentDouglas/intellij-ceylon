@@ -17,7 +17,7 @@ public abstract class CeylonParser implements PsiParser, CeylonTokenTypes, Ceylo
      * @return if the required token was found.
      */
     public static boolean find(final PsiBuilder builder, final IElementType type) {
-        if (type == builder.getTokenType()) {
+        if (matches(builder, type)) {
             builder.advanceLexer();
             return true;
         }
@@ -31,12 +31,38 @@ public abstract class CeylonParser implements PsiParser, CeylonTokenTypes, Ceylo
      * @return if the required token was found.
      */
     public static boolean require(final PsiBuilder builder, final IElementType type, final String message) {
-        if (type == builder.getTokenType()) {
+        if (matches(builder, type)) {
             builder.advanceLexer();
             return true;
         } else {
             builder.error(message);
             return false;
         }
+    }
+
+    public static boolean matches(final PsiBuilder builder, final IElementType type) {
+        final IElementType current = builder.getTokenType();
+        do {
+            if (SHELL_COMMENT == current) {
+                final PsiBuilder.Marker marker = builder.mark();
+                builder.advanceLexer();
+                marker.done(SHELL_COMMENT_ELEMENT);
+                continue;
+            }
+            if (LINE_COMMENT == current) {
+                final PsiBuilder.Marker marker = builder.mark();
+                builder.advanceLexer();
+                marker.done(LINE_COMMENT_ELEMENT);
+                continue;
+            }
+            if (MULTI_LINE_COMMENT == current) {
+                final PsiBuilder.Marker marker = builder.mark();
+                builder.advanceLexer();
+                marker.done(MULTI_LINE_COMMENT_ELEMENT);
+                continue;
+            }
+        } while (false);
+
+        return type == current;
     }
 }
