@@ -270,9 +270,9 @@ public class CeylonParserM1 extends CeylonParser {
      */
     public static boolean parseArguments(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (parsePositionalArguments(builder)) {
+        if (parseNamedArguments(builder)) {
+        } else if (parsePositionalArguments(builder)) {
             parseFunctionalArguments(builder);
-        } else if (parseNamedArguments(builder)) {
         } else {
             marker.rollbackTo();
             return false;
@@ -286,8 +286,8 @@ public class CeylonParserM1 extends CeylonParser {
      */
     public static boolean parseAtom(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (!parseLiteral(builder)
-                && !parseStringTemplate(builder)
+        if (!parseStringTemplate(builder)
+                && !parseLiteral(builder)
                 && !parseSelfReference(builder)
                 && !parseParExpression(builder)) {
             marker.rollbackTo();
@@ -458,6 +458,20 @@ public class CeylonParserM1 extends CeylonParser {
         final PsiBuilder.Marker marker = builder.mark();
         if (!parseMethodReference(builder)
                 && !parseInitializerReference(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(CALLABLE_REFERENCE);
+        return true;
+    }
+
+    /*
+     * StackSafeCallableReference: MethodReference | InitializerReference
+     */
+    public static boolean parseStackSafeCallableReference(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseStackSafeMethodReference(builder)
+                && !parseStackSafeInitializerReference(builder)) {
             marker.rollbackTo();
             return false;
         }
@@ -1342,6 +1356,20 @@ public class CeylonParserM1 extends CeylonParser {
     }
 
     /*
+     * StackSafeInitializerReference: TypeName TypeArguments?
+     */
+    public static boolean parseStackSafeInitializerReference(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseTypeName(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        parseTypeArguments(builder);
+        marker.done(INITIALIZER_REFERENCE);
+        return true;
+    }
+
+    /*
      * Interface: Annotation* InterfaceHeader (InterfaceBody | TypeSpecifier ";")
      */
     public static boolean parseInterface(final PsiBuilder builder) {
@@ -1576,15 +1604,60 @@ public class CeylonParserM1 extends CeylonParser {
     }
 
     /*
+     * StackSafeMemberReference: StackSafeCallableReference | StackSafeValueReference
+     */
+    public static boolean parseStackSafeMemberReference(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseStackSafeCallableReference(builder)
+                && !parseStackSafeValueReference(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(MEMBER_REFERENCE);
+        return true;
+    }
+
+    /*
      * Meta: TypeMeta | MethodMeta | AttributeMeta | FunctionMeta | ValueMeta
+     *
+     *
+     * TypeMeta: Type
+     *
+     * MethodMeta: Type "." MemberName TypeArguments?
+     *
+     * AttributeMeta: Type "." MemberName
+     *
+     * FunctionMeta: MemberName TypeArguments?
+     *
+     * ValueMeta: MemberName TypeArguments?
+     *
+     *
+     * Type: TypeNameWithArguments ("." TypeNameWithArguments)*
      */
     public static boolean parseMeta(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (!parseTypeMeta(builder)
-                && !parseMethodMeta(builder)
-                && !parseAttributeMeta(builder)
-                && !parseFunctionMeta(builder)
-                && !parseValueMeta(builder)) {
+        final PsiBuilder.Marker inner = builder.mark();
+
+        if (parseTypeLazy(builder)) {
+            if (find(builder, MEMBER_OPERATOR)) {
+                if (parseMemberName(builder)) {
+                    if (parseTypeArguments(builder)) {
+                        inner.done(METHOD_META);
+                    } else {
+                        inner.done(ATTRIBUTE_META);
+                    }
+                } else {
+                    builder.error(CeylonBundle.message("expected.membername"));
+                    inner.done(ATTRIBUTE_META);
+                }
+            } else {
+                inner.done(FUNCTION_META);
+            }
+        } else if (parseMemberName(builder)) {
+            parseTypeArguments(builder);
+            inner.done(FUNCTION_META);
+            //inner.done(VALUE_META); //Either or
+        } else {
             marker.rollbackTo();
             return false;
         }
@@ -1707,10 +1780,29 @@ public class CeylonParserM1 extends CeylonParser {
      * MethodReference: (Receiver ".")? MemberName TypeArguments?
      */
     public static boolean parseMethodReference(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
+        PsiBuilder.Marker marker = builder.mark();
         if (parseReciever(builder)) {
             find(builder, MEMBER_OPERATOR);
         }
+        if (!parseMemberName(builder)) {
+            //Drop the receiver and try again
+            marker.rollbackTo();
+            marker = builder.mark();
+            if (!parseMemberName(builder)) {
+                marker.rollbackTo();
+                return false;
+            }
+        }
+        parseTypeArguments(builder);
+        marker.done(METHOD_REFERENCE);
+        return true;
+    }
+
+    /*
+     * StackSafeMethodReference: MemberName TypeArguments?
+     */
+    public static boolean parseStackSafeMethodReference(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
         if (!parseMemberName(builder)) {
             marker.rollbackTo();
             return false;
@@ -2026,25 +2118,32 @@ public class CeylonParserM1 extends CeylonParser {
 
     /*
      * Primary: Atom | Meta | MemberReference | Invocation
+     *
+     * Atom: Literal | StringTemplate | SelfReference | ParExpression
+     *
+     * Meta: TypeMeta | MethodMeta | AttributeMeta | FunctionMeta | ValueMeta
+     *
+     * MemberReference: CallableReference | ValueReference
+     *
+     * Invocation: Primary Arguments | SequenceInstantiation
      */
     public static boolean parsePrimary(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        final IElementType next = builder.getTokenType();
-        if (next != LOWERCASE_IDENTIFIER
-                && next != PACKAGE_IDENTIFIER
-                && next != INTEGER_LITERAL
-                && next != STRING_LITERAL
-                && next != QUOTED_LITERAL
-                && next != CHARACTER_LITERAL) {
-            marker.rollbackTo();
-            return false;
-        }
-        if (!parseAtom(builder)
-                && !parseMeta(builder)
-                && !parseMemberReference(builder)
-                && !parseInvocation(builder)) {
-            marker.rollbackTo();
-            return false;
+        final PsiBuilder.Marker invocation = builder.mark();
+        if (parseAtom(builder)
+                || parseMeta(builder)
+                || parseStackSafeMemberReference(builder)) { //parseMemberReference will blow the stack
+            if (parseArguments(builder)) {
+                invocation.done(INVOCATION);
+            } else {
+                invocation.drop();
+            }
+        } else {
+            invocation.drop();
+            if (!parseSequenceInstantiation(builder)) {
+                marker.rollbackTo();
+                return false;
+            }
         }
         marker.done(PRIMARY);
         return true;
@@ -2499,6 +2598,31 @@ public class CeylonParserM1 extends CeylonParser {
     }
 
     /*
+     * Type: TypeNameWithArguments ("." TypeNameWithArguments)*
+     */
+    public static boolean parseTypeLazy(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseTypeNameWithArguments(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        while (true) {
+            final PsiBuilder.Marker test = builder.mark();
+            if (find(builder, MEMBER_OPERATOR)) {
+                if (!parseTypeNameWithArguments(builder)) {
+                    test.rollbackTo();
+                    break;
+                }
+            } else {
+                test.rollbackTo();
+                break;
+            }
+        }
+        marker.done(TYPE);
+        return true;
+    }
+
+    /*
      * TypeAlias: TypeName "="
      */
     public static boolean parseTypeAlias(final PsiBuilder builder) {
@@ -2756,10 +2880,28 @@ public class CeylonParserM1 extends CeylonParser {
      * ValueReference: (Receiver ".")? MemberName
      */
     public static boolean parseValueReference(final PsiBuilder builder) {
-        final PsiBuilder.Marker marker = builder.mark();
+        PsiBuilder.Marker marker = builder.mark();
         if (parseReciever(builder)) {
             find(builder, MEMBER_OPERATOR);
         }
+        if (!parseMemberName(builder)) {
+            //Drop the receiver and try again
+            marker.rollbackTo();
+            marker = builder.mark();
+            if (!parseMemberName(builder)) {
+                marker.rollbackTo();
+                return false;
+            }
+        }
+        marker.done(VALUE_REFERENCE);
+        return true;
+    }
+
+    /*
+     * StackSafeValueReference: MemberName
+     */
+    public static boolean parseStackSafeValueReference(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
         if (!parseMemberName(builder)) {
             marker.rollbackTo();
             return false;

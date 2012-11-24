@@ -21,3 +21,6 @@ target
 
 # lexer
 _CeylonLexer*
+
+# Java
+hs_err_*

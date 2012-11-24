@@ -1009,7 +1009,7 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     }
 
     /*
-     * Assignment: MemberName ( ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||=" ) Primary
+     * Assignment: ValueReference ( ":=" | "+=" | "-=" | "*=" | "/=" | "%=" | "&=" | "|=" | "^=" | "~=" | "&&=" | "||=" ) Primary
      */
     @Test
     public void testAssignment() {

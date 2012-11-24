@@ -29,7 +29,7 @@ function by(Value x, Value y) {
 }
 ---
 Float amount { //Local named arguments
-  value Float total := 0.0;
+  variable Float total := 0.0;
   for (Item item in items) {
       sum += item.amount;
   }
