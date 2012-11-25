@@ -1,8 +1,18 @@
 #!/bin/bash
 
+[ -f ./vars ] && {
+  source ./vars
+}
+
+IDEA_REPO=${IDEA_REPO-${HOME}/work/intellij-community}
+
+[ -d ${IDEA_REPO} ] || {
+  git clone git://github.com/JetBrains/intellij-community.git ${IDEA_REPO}
+}
+
 create-lexer() {
   local JFLEX_FILE=${1}
-  ${HOME}/work/intellij-community/tools/lexer/jflex-1.4/bin/jflex ${HOME}/work/intellij-ceylon/src/main/java/io/machinecode/intellij/ceylon/lang/lexer/${JFLEX_FILE} --charat --skel ${HOME}/work/intellij-community/tools/lexer/idea-flex.skeleton
+  ${IDEA_REPO}/tools/lexer/jflex-1.4/bin/jflex ${IDEA_REPO}/src/main/java/io/machinecode/intellij/ceylon/lang/lexer/${JFLEX_FILE} --charat --skel ${IDEA_REPO}/tools/lexer/idea-flex.skeleton
 }
 
 create-lexer ceylon_m1.jflex

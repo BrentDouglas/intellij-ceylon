@@ -4,13 +4,13 @@
 #
 # Pinched from https://github.com/gshakhn/sonar-intellij-plugin/blob/master/install-intellij-libs.sh
 
-path=$PATH
-source /etc/init.d/functions
-export PATH="${path}"
+[ -f ./vars ] && {
+  source ./vars
+}
 
-GREEN="\033[32m"
-RED="\033[31m"
-RESET="\033[00m"
+GREEN="${GREEN-\033[32m}"
+RED="${RED-\033[31m}"
+RESET="${RESET-\033[00m}"
 
 IDEA_HOME="${IDEA_HOME-/usr/share/idea}"
 
@@ -40,9 +40,9 @@ install() {
   install-single -Dfile="$IDEA_HOME/lib/annotations.jar" -DgroupId=com.intellij -DartifactId=annotations -Dversion=${VERSION} -Dpackaging=jar
 
   if [ $RETVAL -eq 0 ]; then
-    success
+    echo -e "[${GREEN}OK${RESET}]"
   else
-    failure
+    echo -e "[${RED}FAILED${RESET}]"
   fi
   return $RETVAL
 }

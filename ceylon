@@ -3,13 +3,13 @@
 # @author Brent Douglas <brent.n.douglas@gmail.com>
 #
 
-path=$PATH
-source /etc/init.d/functions
-export PATH="${path}"
+[ -f ./vars ] && {
+  source ./vars
+}
 
-GREEN="\033[32m"
-RED="\033[31m"
-RESET="\033[00m"
+GREEN="${GREEN-\033[32m}"
+RED="${RED-\033[31m}"
+RESET="${RESET-\033[00m}"
 
 WORK_DIR="${WORK_DIR-${HOME}/work}"
 CEYLON_REPO="${CEYLON_REPO-${HOME}/.ceylon/repo}"
@@ -114,9 +114,9 @@ build() {
   run-single ceylon-dist publish-all
 
   if [ $RETVAL -eq 0 ]; then
-    success
+    echo -e "[${GREEN}OK${RESET}]"
   else
-    failure
+    echo -e "[${RED}FAILED${RESET}]"
   fi
   return $RETVAL
 }
@@ -141,9 +141,9 @@ test() {
   run-single ceylon-dist test
 
   if [ $RETVAL -eq 0 ]; then
-    success
+    echo -e "[${GREEN}OK${RESET}]"
   else
-    failure
+    echo -e "[${RED}FAILED${RESET}]"
   fi
   return $RETVAL
 }
@@ -183,9 +183,9 @@ install() {
   install-single ceylon-compiler -Dfile="${CEYLON_REPO}/com/redhat/ceylon/ant/${VERSION}/com.redhat.ceylon.ant-${VERSION}.jar" -DgroupId=com.redhat.ceylon -DartifactId=ant -Dversion=${VERSION} -Dpackaging=jar
 
   if [ $RETVAL -eq 0 ]; then
-    success
+    echo -e "[${GREEN}OK${RESET}]"
   else
-    failure
+    echo -e "[${RED}FAILED${RESET}]"
   fi
   return $RETVAL
 }

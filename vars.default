@@ -1,0 +1,12 @@
+#!/bin/bash
+
+GREEN="\033[32m"
+RED="\033[31m"
+RESET="\033[00m"
+
+WORK_DIR="${HOME}/work"
+CEYLON_REPO="${HOME}/.ceylon/repo"
+
+IDEA_HOME="/usr/share/idea"
+
+IDEA_REPO="${HOME}/work/intellij-community"
