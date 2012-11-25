@@ -12,7 +12,7 @@ IDEA_REPO=${IDEA_REPO-${HOME}/work/intellij-community}
 
 create-lexer() {
   local JFLEX_FILE=${1}
-  ${IDEA_REPO}/tools/lexer/jflex-1.4/bin/jflex ${IDEA_REPO}/src/main/java/io/machinecode/intellij/ceylon/lang/lexer/${JFLEX_FILE} --charat --skel ${IDEA_REPO}/tools/lexer/idea-flex.skeleton
+  ${IDEA_REPO}/tools/lexer/jflex-1.4/bin/jflex ./src/main/java/io/machinecode/intellij/ceylon/lang/lexer/${JFLEX_FILE} --charat --skel ${IDEA_REPO}/tools/lexer/idea-flex.skeleton
 }
 
 create-lexer ceylon_m1.jflex

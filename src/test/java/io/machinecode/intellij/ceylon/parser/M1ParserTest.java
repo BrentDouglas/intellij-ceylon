@@ -69,14 +69,14 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //Attribute: Annotation* (SimpleAttribute | AttributeGetter | AttributeSetter)
     @Test
     public void testAttribute() {
-        assertEmpty(parseLines("attribute.lines.pass.ceylon", ATTRIBUTE));
+        assertEmpty(parseFileSections("attribute.lines.pass.ceylon", ATTRIBUTE));
         assertEmpty(failParseLines("attribute.lines.fail.ceylon", ATTRIBUTE));
     }
 
     //AttributeGetter: AttributeHeader Block
     @Test
     public void testAttributeGetter() {
-        assertEmpty(parseLines("attribute_getter.lines.pass.ceylon", ATTRIBUTE_GETTER));
+        assertEmpty(parseFileSections("attribute_getter.lines.pass.ceylon", ATTRIBUTE_GETTER));
         assertEmpty(failParseLines("attribute_getter.lines.fail.ceylon", ATTRIBUTE_GETTER));
     }
 
@@ -111,8 +111,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     //BooleanCondition: Expression
     @Test
     public void testBooleanCondition() {
-        assertEmpty(parseLines("boolean_reference.lines.pass.ceylon", BOOLEAN_CONDITION));
-        assertEmpty(failParseLines("boolean_reference.lines.fail.ceylon", BOOLEAN_CONDITION));
+        assertEmpty(parseLines("boolean_condition.lines.pass.ceylon", BOOLEAN_CONDITION));
+        assertEmpty(failParseLines("boolean_condition.lines.fail.ceylon", BOOLEAN_CONDITION));
     }
 
     //Break: "break"
@@ -719,7 +719,6 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     @Test
     public void testSelfReference() {
         assertEmpty(parseLines("self_reference.lines.pass.ceylon", SELF_REFERENCE));
-        assertEmpty(failParseLines("self_reference.lines.fail.ceylon", SELF_REFERENCE));
     }
 
     //Sequence: Expression ("," Expression)* | Expression "..."

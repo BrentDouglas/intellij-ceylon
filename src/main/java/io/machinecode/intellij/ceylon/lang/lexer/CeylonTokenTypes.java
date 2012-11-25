@@ -59,6 +59,7 @@ public interface CeylonTokenTypes extends TokenType {
     CeylonTokenType RIGHT_BRACE_OPERATOR = new CeylonTokenType("}");
     CeylonTokenType LEFT_PARENTHESIS_OPERATOR = new CeylonTokenType("(");
     CeylonTokenType RIGHT_PARENTHESIS_OPERATOR = new CeylonTokenType(")");
+    CeylonTokenType DOUBLE_ABBREVIATION_OPERATOR = new CeylonTokenType("?[]");
     CeylonTokenType NULLSAFE_LOOKUP_OPERATOR = new CeylonTokenType("?[");
     CeylonTokenType LEFT_BRACKET_OPERATOR = new CeylonTokenType("[");
     CeylonTokenType RIGHT_BRACKET_OPERATOR = new CeylonTokenType("]");

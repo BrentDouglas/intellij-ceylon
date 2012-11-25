@@ -1,0 +1,10 @@
+Integer count := 0;
+Integer max = +99;
+Decimal pi = calculatePi();
+Integer[] evenDigits = {0,2,4,6,8};
+value count := 0;
+value max = +99;
+value pi = calculatePi();
+value evenDigits = {0,2,4,6,8};
+value count:=0;
+value names = List<String>();

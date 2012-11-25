@@ -181,7 +181,8 @@ public class CeylonParserM1 extends CeylonParser {
     public static boolean parseAbbreviation(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
         if (!find(builder, DEFAULT_OPERATOR)
-                && !find(builder, ARRAY_OPERATOR)) {
+                && !find(builder, ARRAY_OPERATOR)
+                && !find(builder, DOUBLE_ABBREVIATION_OPERATOR)) {
             marker.rollbackTo();
             return false;
         }
@@ -602,7 +603,7 @@ public class CeylonParserM1 extends CeylonParser {
         if (!parseCaseType(builder)) {
             builder.error(CeylonBundle.message("expected.casetype"));
         }
-        while (find(builder, INTERSECTION_OPERATOR)) {
+        while (find(builder, UNION_OPERATOR)) {
             if (!parseCaseType(builder)) {
                 builder.error(CeylonBundle.message("expected.casetype"));
             }
@@ -753,6 +754,7 @@ public class CeylonParserM1 extends CeylonParser {
             marker.rollbackTo();
             return false;
         }
+        marker.done(CONTINUE);
         marker.done(CONTINUE);
         return true;
     }
@@ -2313,6 +2315,20 @@ public class CeylonParserM1 extends CeylonParser {
         return true;
     }
 
+    public static boolean parseSequencedTypeLazy(final PsiBuilder builder) {
+        final PsiBuilder.Marker marker = builder.mark();
+        if (!parseTypeName(builder)) {
+            marker.rollbackTo();
+            return false;
+        }
+        if (!find(builder, ELLIPSES_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        marker.done(SEQUENCED_TYPE);
+        return true;
+    }
+
     /*
      * SequencedTypeParam: TypeName "..."
      */
@@ -2355,6 +2371,7 @@ public class CeylonParserM1 extends CeylonParser {
             require(builder, SEMICOLON_OPERATOR, CeylonBundle.message("expected.semicolon"));
         } else if (parseNamedArguments(builder)) {
         } else {
+            //Possible failure?
             builder.error(CeylonBundle.message("expected.specifierorinitializerornamedarguments"));
         }
         marker.done(SIMPLE_ATTRIBUTE);
@@ -2648,12 +2665,18 @@ public class CeylonParserM1 extends CeylonParser {
             marker.rollbackTo();
             return false;
         }
-        while (parseUnionType(builder)) {
-            require(builder, COMMA_OPERATOR, CeylonBundle.message("expected.comma"));
-        }
-        if (!parseUnionType(builder)
-            || parseSequencedType(builder)) {
-            builder.error(CeylonBundle.message("expected.uniontypeofsequencedtype"));
+
+        while (true) {
+            if (parseSequencedTypeLazy(builder)) {
+                break;
+            } else if (parseUnionType(builder)) {
+                if (!find(builder, COMMA_OPERATOR)) {
+                    break;
+                }
+            } else {
+                builder.error(CeylonBundle.message("expected.uniontypeofsequencedtype"));
+                break;
+            }
         }
         require(builder, GREATER_THAN_OPERATOR, CeylonBundle.message("expected.greaterthan"));
         marker.done(TYPE_ARGUMENTS);

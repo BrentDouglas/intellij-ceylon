@@ -1,0 +1,10 @@
+Adfkljgh9879847564
+A_fdghkourty456456
+UPPER_CASE_987534
+String
+String<Value>
+String<Value...>
+String<Key,Decimal>
+String<Key,Decimal,Float...>
+String<Key|Value,Decimal,Float...>
+String<Key|Value,Float|Decimal,String...>

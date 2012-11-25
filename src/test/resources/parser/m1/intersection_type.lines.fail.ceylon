@@ -1,6 +1,3 @@
-string|Integer|Float
-231
-|String|Integer|Float
 string?
 string[]
 BufferedReader.asdf()?

@@ -1,0 +1,1 @@
+shared assign name { firstName := first(name); lastName := last(name); }

@@ -148,6 +148,7 @@ ESCAPE_SEQUENCE=\\[btnfr\\\"\'`]
 <YYINITIAL> "[]" { return CeylonTokenTypes.ARRAY_OPERATOR; }
 <YYINITIAL> "[" { return CeylonTokenTypes.LEFT_BRACKET_OPERATOR; }
 <YYINITIAL> "]" { return CeylonTokenTypes.RIGHT_BRACKET_OPERATOR; }
+<YYINITIAL> "?[]" { return CeylonTokenTypes.DOUBLE_ABBREVIATION_OPERATOR; }
 <YYINITIAL> "?[" { return CeylonTokenTypes.NULLSAFE_LOOKUP_OPERATOR; }
 <YYINITIAL> "?." { return CeylonTokenTypes.SAFE_MEMBER_OPERATOR; }
 <YYINITIAL> "?" { return CeylonTokenTypes.DEFAULT_OPERATOR; }

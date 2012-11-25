@@ -1,0 +1,12 @@
+Integer count
+Integer max
+Decimal pi
+Integer[] evenDigits
+Integer|Float count
+Integer|Float max
+Decimal|Float pi
+Integer[]|Float evenDigits
+value count
+value max
+value pi
+value evenDigits
