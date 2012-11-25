@@ -997,6 +997,8 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     */
     @Test
     public void testOperatorExpression() {
+        assertEmpty(parseLines("operator_expression.lines.pass.ceylon", OPERATOR_EXPRESSION));
+        assertEmpty(failParseLines("operator_expression.lines.fail.ceylon", OPERATOR_EXPRESSION));
     }
 
     /*
