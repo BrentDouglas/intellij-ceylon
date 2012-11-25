@@ -1,0 +1,9 @@
+BufferedReader.Buffer[] -> BufferedReader.Buffer & Entry<Integer,Element>[] -> Entry<Integer,Element>[] |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+Entry<Integer,Element>? -> BufferedReader.Buffer & Entry<Integer,Element>[] -> Entry<Integer,Element>? |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+Entry<Integer,Element>[] -> BufferedReader.Buffer & Entry<Integer,Element>[] -> Entry<Integer,Element>[] |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+String? -> Entry<Integer,Element>[] & Entry<Integer,Element>[] -> Entry<Integer,Element>[] |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+String[] -> Entry<Integer,Element>[] & Entry<Integer,Element>[] -> Entry<Integer,Element>[] |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+BufferedReader.Buffer? -> Entry<Integer,Element>[] & Entry<Integer,Element>[] -> Entry<Integer,Element>? |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+BufferedReader.Buffer[] -> Entry<Integer,Element>[] & Entry<Integer,Element>[] -> Entry<Integer,Element>? |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+Entry<Integer,Element>? -> Entry<Integer,Element>[] & Entry<Integer,Element>? -> Entry<Integer,Element>[] |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf
+Entry<Integer,Element>[] -> Entry<Integer,Element>[] & Entry<Integer,Element>? -> Entry<Integer,Element>[] |  String?[] -> Entry<Integer,Element>[] & Entry<Integer,Element>?[] -> Entry<Integer,Element>[] asdf

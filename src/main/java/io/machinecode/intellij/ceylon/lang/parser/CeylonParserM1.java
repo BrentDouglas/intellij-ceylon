@@ -171,6 +171,8 @@ public class CeylonParserM1 extends CeylonParser {
         if (root == INCREMENT_OR_DECREMENT) parseIncrementOrDecrement(builder);
         if (root == ASSIGNMENT) parseAssignment(builder);
 
+        find(builder, WHITE_SPACE); //Should eat up any remaining comments and whitespace
+
         marker.done(root);
         return builder.getTreeBuilt();
     }
@@ -1262,7 +1264,7 @@ public class CeylonParserM1 extends CeylonParser {
             boolean foundComma = false;
             while (find(builder, COMMA_OPERATOR)) {
                 foundComma = true;
-                if (!parseImportElement(builder)) {
+                if (parseImportElement(builder)) {
                     foundComma = false;
                 } else {
                     break;
@@ -1725,7 +1727,11 @@ public class CeylonParserM1 extends CeylonParser {
             marker.rollbackTo();
             return false;
         }
-        require(builder, SPECIFY_OPERATOR, CeylonBundle.message("expected.specify"));
+        if (!find(builder, SPECIFY_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
+        //require(builder, SPECIFY_OPERATOR, CeylonBundle.message("expected.specify"));
         marker.done(METHOD_ATTRIBUTE_ALIAS);
         return true;
     }
@@ -1765,11 +1771,14 @@ public class CeylonParserM1 extends CeylonParser {
      */
     public static boolean parseMethodMeta(final PsiBuilder builder) {
         final PsiBuilder.Marker marker = builder.mark();
-        if (!parseType(builder)) {
+        if (!parseTypeLazy(builder)) {
             marker.rollbackTo();
             return false;
         }
-        require(builder, MEMBER_OPERATOR, CeylonBundle.message("expected.memberoperator"));
+        if (!find(builder, MEMBER_OPERATOR)) {
+            marker.rollbackTo();
+            return false;
+        }
         if (!parseMemberName(builder)) {
             builder.error(CeylonBundle.message("expected.membername"));
         }
@@ -2630,6 +2639,7 @@ public class CeylonParserM1 extends CeylonParser {
                     test.rollbackTo();
                     break;
                 }
+                test.drop();
             } else {
                 test.rollbackTo();
                 break;
