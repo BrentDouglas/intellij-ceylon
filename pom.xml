@@ -7,7 +7,7 @@
     <groupId>io.machinecode</groupId>
     <artifactId>intellij-ceylon</artifactId>
     <packaging>jar</packaging>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

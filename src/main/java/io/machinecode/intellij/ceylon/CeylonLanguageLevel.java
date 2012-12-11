@@ -21,7 +21,9 @@ public enum CeylonLanguageLevel {
     M1(_CeylonLexerM1.class, CeylonParserM1.INSTANCE),
     M2(_CeylonLexerM2.class, CeylonParserM1.INSTANCE), //Nothing changed
     M3(_CeylonLexerM3.class, CeylonParserM3.INSTANCE),
-    M4(_CeylonLexerM4.class, CeylonParserM4.INSTANCE);
+    M4(_CeylonLexerM4.class, CeylonParserM4.INSTANCE),
+
+    M1_TEST(_CeylonLexerM1.class, CeylonParserM1.TEST);
 
     public static final String PERSISTENT_STORE_NAME = "CeylonLanguageLevel";
 

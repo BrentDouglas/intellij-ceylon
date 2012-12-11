@@ -1,12 +1,6 @@
 package io.machinecode.intellij.ceylon.lang.parser;
 
 import com.intellij.ide.util.PropertiesComponent;
-import io.machinecode.intellij.ceylon.CeylonLanguageLevel;
-import io.machinecode.intellij.ceylon.lang.lexer.CeylonLexer;
-import io.machinecode.intellij.ceylon.lang.lexer.CeylonTokenSets;
-import io.machinecode.intellij.ceylon.lang.psi.CeylonPsiCreator;
-import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonCompilationUnitImpl;
-import io.machinecode.intellij.ceylon.lang.psi.stub.CeylonStubFileElementType;
 import com.intellij.lang.ASTNode;
 import com.intellij.lang.LanguageUtil;
 import com.intellij.lang.ParserDefinition;
@@ -19,6 +13,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.tree.IFileElementType;
 import com.intellij.psi.tree.IStubFileElementType;
 import com.intellij.psi.tree.TokenSet;
+import io.machinecode.intellij.ceylon.CeylonLanguageLevel;
+import io.machinecode.intellij.ceylon.lang.lexer.CeylonTokenSets;
+import io.machinecode.intellij.ceylon.lang.psi.CeylonPsiCreator;
+import io.machinecode.intellij.ceylon.lang.psi.impl.CeylonCompilationUnitImpl;
+import io.machinecode.intellij.ceylon.lang.psi.stub.CeylonStubFileElementType;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -27,21 +26,29 @@ import org.jetbrains.annotations.NotNull;
 public class CeylonParserDefinition implements ParserDefinition {
     public static final IStubFileElementType CEYLON_FILE = new CeylonStubFileElementType();
 
-    @NotNull
-    public Lexer createLexer(final Project project) {
+    public static Lexer createLexerForProject(final Project project) {
         return CeylonLanguageLevel.valueOf(
                 PropertiesComponent.getInstance(project).getValue(
-                        CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M4.name()
+                        CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M1.name()
                 )
         ).getLexer();
     }
 
-    public PsiParser createParser(final Project project) {
+    public PsiParser createParserForProject(final Project project) {
         return CeylonLanguageLevel.valueOf(
                 PropertiesComponent.getInstance(project).getValue(
-                        CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M4.name()
+                        CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M1.name()
                 )
         ).getParser();
+    }
+
+    @NotNull
+    public Lexer createLexer(final Project project) {
+        return createLexerForProject(project);
+    }
+
+    public PsiParser createParser(final Project project) {
+        return createParserForProject(project);
     }
 
     public IFileElementType getFileNodeType() {

@@ -3,9 +3,9 @@
     <id>io.machinecode.intellij.ceylon</id>
     <description>Plugin for Ceylon</description>
     <category>Custom Languages</category>
-    <version>1.0</version>
+    <version>0.1-SNAPSHOT</version>
     <vendor>Brent Douglas</vendor>
-    <idea-version since-build="8000"/>
+    <idea-version since-build="107.105"/>
 
     <application-components>
         <!-- Add your application components here -->
@@ -18,14 +18,18 @@
     <actions>
         <!-- Add your actions here -->
     </actions>
+
     <extensionPoints>
 
     </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <testFramework implementation="io.machinecode.intellij.ceylon.CeylonTestFramework"/>
+        <errorHandler implementation="com.intellij.diagnostic.ITNReporter"/>
+        <fileTypeFactory implementation="io.machinecode.intellij.ceylon.CeylonFileTypeLoader"/>
 
+        <lang.syntaxHighlighterFactory key="Ceylon" implementationClass="io.machinecode.intellij.ceylon.highlighter.CeylonSyntaxHighlighterFactory"/>
         <lang.parserDefinition language="Ceylon" implementationClass="io.machinecode.intellij.ceylon.lang.parser.CeylonParserDefinition"/>
+
+        <testFramework id="Ceylon" implementation="io.machinecode.intellij.ceylon.CeylonTestFramework"/>
     </extensions>
 </idea-plugin>

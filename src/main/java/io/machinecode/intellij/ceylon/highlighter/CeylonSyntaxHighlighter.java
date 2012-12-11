@@ -1,12 +1,11 @@
 package io.machinecode.intellij.ceylon.highlighter;
 
-import io.machinecode.intellij.ceylon.lang.lexer.CeylonHighlightingLexer;
-import io.machinecode.intellij.ceylon.lang.lexer.CeylonTokenSets;
 import com.intellij.lexer.Lexer;
 import com.intellij.openapi.editor.SyntaxHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
+import io.machinecode.intellij.ceylon.lang.lexer.CeylonTokenSets;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,6 +16,12 @@ import java.util.Map;
  * @author Brent Douglas <brent.n.douglas@gmail.com>
  */
 public class CeylonSyntaxHighlighter extends SyntaxHighlighterBase {
+
+    private final Lexer lexer;
+
+    public CeylonSyntaxHighlighter(final Lexer lexer) {
+        this.lexer = lexer;
+    }
 
     private static final Map<IElementType, TextAttributesKey> ATTRIBUTES = new HashMap<IElementType, TextAttributesKey>();
 
@@ -101,7 +106,7 @@ public class CeylonSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @NotNull
     public Lexer getHighlightingLexer() {
-        return new CeylonHighlightingLexer();
+        return lexer;
     }
 
     @NotNull

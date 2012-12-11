@@ -20,7 +20,7 @@ public class M1ParserTest extends CeylonTestCase implements CeylonElementTypes {
     protected void setUp() {
         super.setUp();
         PropertiesComponent.getInstance(myProject).setValue(
-                CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M1.name()
+                CeylonLanguageLevel.PERSISTENT_STORE_NAME, CeylonLanguageLevel.M1_TEST.name()
         );
     }
 
